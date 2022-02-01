@@ -18,6 +18,8 @@ setup(
         'pytest',
         'pytest-mock',
         'pandas_plink',
+        'Matplotlib',
+        'scikit_allel',
     ],
     python_requires='>=3.6',
 )
