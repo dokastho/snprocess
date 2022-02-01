@@ -1,0 +1,9 @@
+#!/bin/bash
+# make clean 
+# make
+echo Branch to commit to
+read branch
+git add .
+git commit
+git push origin $branch
+echo done!
