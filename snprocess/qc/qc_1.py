@@ -16,30 +16,32 @@ def QC_1(inDir, outDir, inFile):
     
     ####################################################
     # STEP 1: check missingness and generate plots
-    bash("plink --file {} --missing --out {}".format(inFile,outFile))
+    bash("plink --file {} --missing".format(inFile))
 
-    bash("/usr/bin/Rscript --no-save hist_miss.R {}.imiss {}.lmiss {}".format(outFile,outFile, outDir))
+    bash("/usr/bin/Rscript --no-save hist_miss.R plink.imiss plink.lmiss {}".format(outDir))
 
     ####################################################
     # STEP 2: remove individuals with high missingness.. They recommend using a less stringent filter and then following it with a more stringent filter. Even the more stringent filter is more relaxed than Srijan's
     # Also, they filter on SNP missingness and indivudal missingness. Srijan first filters on individual missingness and then on SNPs much later
 
     # filter SNPs at 0.01
-    bash("plink --file {} --geno 0.01 --make-bed --out {}_1".format(inFile,outFile))
+    bash("plink --file {} --geno 0.01 --make-bed".format(inFile))
 
     # filter individuals at 0.2
-    bash("plink --bfile ${outFile}_1 --mind 0.05 --make-bed --out ${outFile}_2")
+    bash("plink --bfile plink --mind 0.05 --make-bed")
 
     ####################################################
     # STEP 3: sexcheck
-    bash("plink --bfile ${outFile}_2 --check-sex --out ${outFile}")
+    bash("plink --bfile plink --check-sex")
 
     # visualize the sex check
-    bash("/usr/bin/Rscript --no-save sex_check.R ${outFile}.sexcheck ${outDir}")
+    bash("/usr/bin/Rscript --no-save sex_check.R plink.sexcheck {}".format(outDir))
 
     # remove individuals with problematic sex
-    bash('''grep "PROBLEM" ${outFile}.sexcheck | awk '{print$1,$2}' > ${outDir}sex_discrepency.txt''')
-    bash("plink -bfile ${outFile}_2 --remove ${outDir}sex_discrepency.txt --make-bed --out ${outFile}_3")
+    # TODO this line might have issues
+    # bash('''grep "PROBLEM" ${outFile}.sexcheck | awk '{print$1,$2}' > ${outDir}sex_discrepency.txt''')
+    bash('grep "PROBLEM" plink.sexcheck | awk "{print$1,$2}" > {}sex_discrepency.txt'.format((outDir)))
+    bash("plink -bfile plink --remove {}sex_discrepency.txt --make-bed".format(outDir))
 
     # impute sex... (not sure why this is necessary). NOT RUNNING IT
     #plink -bfile ${outFile}_5 --impute-sex --make-bed --out ${outFile}_6
@@ -48,8 +50,8 @@ def QC_1(inDir, outDir, inFile):
     # STEP 4: select autosomal SNPs only an filter out SNPs with low minor allele frequency (MAF)
 
     # select autosomal SNPs only, ie from chr 1 to 22
-    bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' ${outFile}_3.bim > ${outDir}snp_1_22.txt")
-    bash("plink --bfile ${outFile}_3 --extract ${outDir}snp_1_22.txt --make-bed --out ${outFile}_4")
+    bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' plink.bim > {}snp_1_22.txt".format(outDir))
+    bash("plink --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
 
     # generat plot of MAF distribution
     bash("plink --bfile ${outFile}_4 --freq --out ${outDir}MAF_check")
