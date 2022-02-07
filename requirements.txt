@@ -1,0 +1,6 @@
+pycodestyle
+pydocstyle
+pylint
+pytest
+pytest-mock
+snakemake
