@@ -20,7 +20,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     
     ####################################################
     # STEP 1: check missingness and generate plots
-    bash("plink --file {} --missing".format(inFile))
+    bash("plink --bfile {} --missing".format(inFile))
 
     bash("/usr/bin/Rscript --no-save hist_miss.R plink.imiss plink.lmiss {}".format(outDir))
 
@@ -58,27 +58,27 @@ def QC_1(inDir, outDir, inFile, verbose):
     bash("plink --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
 
     # generat plot of MAF distribution
-    bash("plink --bfile ${outFile}_4 --freq --out ${outDir}MAF_check")
+    bash("plink --bfile {} --freq --out {}MAF_check".format(outFile, outDir))
 
     #visualize it
-    bash("/usr/bin/Rscript --no-save MAF_check.R ${outDir}MAF_check. ${outDir}")
+    bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
-    bash("plink --bfile ${outFile}_4 --maf 0.005 --make-bed --out ${outFile}_5")
+    bash("plink --bfile {} --maf 0.005 --make-bed".format(outFile, outFile))
 
     ####################################################
     # STEP 5: Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
 
-    bash("plink --bfile ${outFile}_5 --hardy --out ${outFile}")
+    bash("plink --bfile {} --hardy".format(outFile))
 
     # select SNPs with HWE p-value below 0.00001
-    bash("awk '{ if ($9 < 0.0001) print $0 }' ${outFile}.hwe > ${outFile}zoomhwe.hwe")
-    bash("/usr/bin/Rscript --no-save hwe.R ${outFile}.hwe ${outFile}zoomhwe.hwe ${outDir}")
+    bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outFile))
+    bash("/usr/bin/Rscript --no-save hwe.R {}.hwe {}zoomhwe.hwe {}".format(outFile, outDir))
 
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     #plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
-    bash("plink --bfile ${outFile}_5 --hwe 1e-10 --hwe-all --make-bed --out ${outFile}_6")
+    bash("plink --bfile {} --hwe 1e-10 --hwe-all --make-bed".format(outFile))
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning
@@ -92,39 +92,40 @@ def QC_1(inDir, outDir, inFile, verbose):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    bash("plink --bfile ${outFile}_6 --indep-pairwise 50 5 0.5 --out ${outDir}indepSNP")
+    bash("plink --bfile {} --indep-pairwise 50 5 0.5 --out {}indepSNP".format(outFile, outDir))
 
     # get the pruned data set
-    bash("plink --bfile ${outFile}_6 --extract ${outDir}indepSNP.prune.in --het --out ${outDir}R_hetCheck")
+    bash("plink --bfile {} --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outFile, outDir, outDir))
 
     # plot the heterogygosity rate
-    bash("RScript --no-save heterogygosity_rate.R ${outDir}R_hetCheck ${outDir}")
+    bash("RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
 
     # list the individuals more than 3 sd away from the heterozygosity rate mean.
-    bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R ${outDir}R_hetCheck ${outDir}")
+    bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
 
     # need to exclude these individuals from the analysis.
-    bash('''sed 's/"// g' ${outDir}fail-het-qc.txt | awk '{print $1, $2}' > ${outDir}het-fail-ind.txt''')
+    # TODO: what are $1, $2?
+    bash('''sed 's/"// g' {}fail-het-qc.txt | awk '{print $1, $2}' > {}het-fail-ind.txt'''.format(outDir, outDir))
 
-    bash("plink --bfile ${outFile}_6 --remove ${outDir}het-fail-ind.txt --make-bed --out ${outFile}_7")
+    bash("plink --bfile {}_6 --remove {}het-fail-ind.txt --make-bed".format(outFile, outDir))
 
     ############################################################
     # STEP 7: Relatedness
 
     # This step isn't there in Yu's workflow, because it shouldn't really be necessary.
 
-    bash("plink --bfile ${outFile}_7 --extract ${outDir}indepSNP.prune.in --genome --min 0.2 --out ${outDir}pihat_min0.2")
+    bash("plink --bfile {} --extract {}indepSNP.prune.in --genome --min 0.2 --out {}pihat_min0.2".format(outFile, outDir, outDir))
 
     # visualize relations. But there will be none! or should be none!
-    bash("awk '{ if ($8 > 0.9) print $0}' ${outDir}pihat_min0.2.genome > ${outDir}zoom_pihat.genome")
+    bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
 
-    bash("/usr/bin/Rscript --no-save relatedness.R ${outDir}pihat_min0.2.genome ${outDir}zoom_pihat.genome ${outDir}")
+    bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
     # we shouldn't have any parent offspring relationships! but let's see if anything pops up
-    bash("awk '{ if ($8 > 0.9) print $0 }' ${outDir}pihat_min0.2.genome > ${outDir}zoom_pihat.genome")
+    bash("awk '{ if ($8 > 0.9) print $0 }' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
 
     # visualize
-    bash("/usr/bin/Rscript --no-save relatedness.R ${outDir}pihat_min0.2.genome ${outDir}zoom_pihat.genome ${outDir}")
+    bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
 
     #if there is anyone with a piHat more than 0.2, remove them!
