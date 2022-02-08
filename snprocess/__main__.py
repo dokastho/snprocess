@@ -1,5 +1,6 @@
 """Run all scripts on all phases"""
-from snprocess.qc import qc_1, qc_2
+from snprocess.qc.qc_1 import QC_1
+from snprocess.qc.qc_2 import QC_2
 from snprocess.model import make_bed
 import click
 
@@ -16,7 +17,8 @@ def main(phase, inDir, file, outDir, verbose):
         inDir = "../input/"
         outDir = "../qc/"
         inFile = "merge"
-        qc_1(inDir, outDir, inFile, verbose)
+        QC_1(inDir, outDir, inFile, verbose)
+        QC_2()
 
     # Phase 2 #################################
     elif phase == 2 or phase == 0:
@@ -24,7 +26,8 @@ def main(phase, inDir, file, outDir, verbose):
         outDir = "../data/qc/"
         inFile = "Reports"
         inFile = make_bed(inDir, inFile)
-        qc_1(inDir, outDir, inFile, verbose)
+        QC_1(inDir, outDir, inFile, verbose)
+        QC_2()
 
     # Phase 3 #################################
     elif phase == 3 or phase == 0:
@@ -32,7 +35,8 @@ def main(phase, inDir, file, outDir, verbose):
         outDir = "../data/qc/"
         inFile = "Reports"
         inFile = make_bed(inDir, inFile)
-        qc_1(inDir, outDir, inFile, verbose)
+        QC_1(inDir, outDir, inFile, verbose)
+        QC_2()
 
 
 if __name__ == "__main__":

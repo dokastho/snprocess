@@ -1,9 +1,4 @@
-"""
-Handle data from /PRS/phase3/scripts/QC_1.sh.
-inDir: input files directory, relative link
-outDir: input files directory, relative link
-inFile: format for input file
-"""
+"""First step in data handling."""
 # TODO update lines using where() so that names work
 
 from os import mkdir
@@ -11,7 +6,12 @@ from os.path import join
 from snprocess.model import run_command as bash
 
 def QC_1(inDir, outDir, inFile, verbose):
-    """First step in data handling."""
+    """
+    Handle data from /PRS/phase3/scripts/QC_1.sh.
+    inDir: input files directory, relative link
+    outDir: input files directory, relative link
+    inFile: format for input file
+    """
     # args vary by phase, make a driver file to manage this TODO
     mkdir(join(outDir))
 
