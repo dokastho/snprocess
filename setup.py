@@ -17,7 +17,7 @@ setup(
         'pylint',
         'pytest',
         'pytest-mock',
-        'snakemake',
+        'click',
     ],
     python_requires='>=3.6',
     entry_points={
