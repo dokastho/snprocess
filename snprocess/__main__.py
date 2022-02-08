@@ -10,7 +10,7 @@ import click
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
 def main(phase, inDir, file, outDir, verbose):
     """
-    Run all scripts on 'Phase' passed in as argument. Input 0 to run all phases
+    Run all scripts on 'Phase' passed in as argument. Input 0 to run on all phases
     """
     # Phase 1 #################################
     if phase == 1 or phase == 0:

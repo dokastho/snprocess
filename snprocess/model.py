@@ -7,6 +7,8 @@ def run_command(cmd):
     """Run a bash command and handle errors."""
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
+    if error is not None:
+        exit("{}: Process exited with error".format(cmd))
     return output
 
 def make_bed(inDir, inFile):
