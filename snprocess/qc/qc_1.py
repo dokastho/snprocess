@@ -78,7 +78,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     #plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
-    bash("plink --bfile {} --hwe 1e-10 --hwe-all --make-bed".format(outFile))
+    bash("plink --bfile plink --hwe 1e-10 --hwe-all --make-bed")
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning
@@ -92,10 +92,10 @@ def QC_1(inDir, outDir, inFile, verbose):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    bash("plink --bfile {} --indep-pairwise 50 5 0.5 --out {}indepSNP".format(outFile, outDir))
+    bash("plink --bfile plink --indep-pairwise 50 5 0.5 --out {}indepSNP")
 
     # get the pruned data set
-    bash("plink --bfile {} --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outFile, outDir, outDir))
+    bash("plink --bfile plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format( outDir, outDir))
 
     # plot the heterogygosity rate
     bash("RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
@@ -107,14 +107,14 @@ def QC_1(inDir, outDir, inFile, verbose):
     # TODO: what are $1, $2?
     bash('''sed 's/"// g' {}fail-het-qc.txt | awk '{print $1, $2}' > {}het-fail-ind.txt'''.format(outDir, outDir))
 
-    bash("plink --bfile {}_6 --remove {}het-fail-ind.txt --make-bed".format(outFile, outDir))
+    bash("plink --bfile plink --remove {}het-fail-ind.txt --make-bed".format(outDir))
 
     ############################################################
     # STEP 7: Relatedness
 
     # This step isn't there in Yu's workflow, because it shouldn't really be necessary.
 
-    bash("plink --bfile {} --extract {}indepSNP.prune.in --genome --min 0.2 --out {}pihat_min0.2".format(outFile, outDir, outDir))
+    bash("plink --bfile plink --extract {}indepSNP.prune.in --genome --min 0.2 --out {}pihat_min0.2".format(outDir, outDir))
 
     # visualize relations. But there will be none! or should be none!
     bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
