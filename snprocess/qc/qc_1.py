@@ -5,6 +5,7 @@ from os import mkdir
 from os.path import join
 from snprocess.model import plink
 from snprocess.model import run_command as bash
+from string import Template
 
 def QC_1(inDir, outDir, inFile, verbose):
     """
@@ -33,7 +34,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     # Also, they filter on SNP missingness and indivudal missingness. Srijan first filters on individual missingness and then on SNPs much later
 
     # filter SNPs at 0.01
-    plink(" --file {} --geno 0.01 --make-bed".format(inFile))
+    plink(" --bfile {} --geno 0.01 --make-bed".format(inFile))
 
     # filter individuals at 0.2
     plink(" --bfile plink --mind 0.05 --make-bed")
@@ -46,9 +47,10 @@ def QC_1(inDir, outDir, inFile, verbose):
     bash("/usr/bin/Rscript --no-save sex_check.R plink.sexcheck {}".format(outDir))
 
     # remove individuals with problematic sex
-    # TODO this line might have issues
-    # bash('''grep "PROBLEM" ${outFile}.sexcheck | awk '{print$1,$2}' > ${outDir}sex_discrepency.txt''')
-    bash('grep "PROBLEM" plink.sexcheck | awk "{print$1,$2}" > {}sex_discrepency.txt'.format((outDir)))
+    # TODO add write to file
+    output = bash('grep "PROBLEM" plink.sexcheck', "awkout.txt")
+    bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
+
     plink(" -bfile plink --remove {}sex_discrepency.txt --make-bed".format(outDir))
 
     # impute sex... (not sure why this is necessary). NOT RUNNING IT
@@ -108,7 +110,6 @@ def QC_1(inDir, outDir, inFile, verbose):
     bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
 
     # need to exclude these individuals from the analysis.
-    # TODO: what are $1, $2?
     bash('''sed 's/"// g' {}fail-het-qc.txt | awk '{print $1, $2}' > {}het-fail-ind.txt'''.format(outDir, outDir))
 
     plink(" --bfile plink --remove {}het-fail-ind.txt --make-bed".format(outDir))
