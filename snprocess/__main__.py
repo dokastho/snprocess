@@ -8,14 +8,17 @@ import click
 @click.command()
 @click.argument('phase', type=click.INT)
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
-def main(phase, inDir, file, outDir, verbose):
+def main(phase, verbose):
     """
     Run all scripts on 'Phase' passed in as argument. Input 0 to run on all phases
     """
+
+    fileRoute = "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS"
     # Phase 1 #################################
     if phase == 1 or phase == 0:
-        inDir = "../input/"
-        outDir = "../qc/"
+        inDir = fileRoute + "/Phase1/input/"
+        # outDir = fileRoute + "/Phase1/qc/"
+        outDir = ""
         inFile = "merge"
         QC_1(inDir, outDir, inFile, verbose)
         QC_2()
