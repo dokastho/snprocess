@@ -2,6 +2,7 @@
 
 import snprocess
 import subprocess
+import pandas as pd
 
 def run_command(cmd):
     """Run a bash command and handle errors."""
@@ -10,7 +11,7 @@ def run_command(cmd):
     output = process.communicate()
     if process.returncode != 0:
         exit("{}: Process exited with error".format(cmd))
-    return output
+    return output[0]
 
 def make_bed(inDir, inFile):
     """Convert SNP file to binary format. Return name of binary file."""
@@ -21,3 +22,10 @@ def make_bed(inDir, inFile):
 def plink(cmd):
     """Run a plink command using run_command."""
     return run_command("./bin/plink" + cmd)
+
+def read_from_output(output):
+    output = output.split()
+    rows = output.count(b'PROBLEM')
+    cols = int(len(output) / rows)
+    output = [output[i:i + cols] for i in range(0, len(output), cols)]
+    output = pd.DataFrame(output)
