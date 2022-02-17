@@ -3,7 +3,7 @@
 
 from os import mkdir
 from os.path import join
-from snprocess.model import plink
+from snprocess.model import plink, read_from_output as read
 from snprocess.model import run_command as bash
 
 def QC_1(inDir, outDir, inFile, verbose):
@@ -48,6 +48,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     # remove individuals with problematic sex
     # TODO add write to file
     output = bash('grep PROBLEM plink.sexcheck')
+    output = read(output,b'PROBLEM')
 
     bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
 

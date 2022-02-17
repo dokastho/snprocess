@@ -23,9 +23,11 @@ def plink(cmd):
     """Run a plink command using run_command."""
     return run_command("./bin/plink" + cmd)
 
-def read_from_output(output):
+def read_from_output(output, key):
+    """Redturn a dataframe from command output."""
     output = output.split()
-    rows = output.count(b'PROBLEM')
+    rows = output.count(key)
     cols = int(len(output) / rows)
     output = [output[i:i + cols] for i in range(0, len(output), cols)]
     output = pd.DataFrame(output)
+    return output
