@@ -24,7 +24,7 @@ def plink(cmd):
     return run_command("./bin/plink" + cmd)
 
 def read_from_output(output, key):
-    """Redturn a dataframe from command output."""
+    """Return a dataframe from command output, rows and cols established using KEY"""
     output = output.split()
     rows = output.count(key)
     cols = int(len(output) / rows)
