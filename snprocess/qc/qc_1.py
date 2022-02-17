@@ -5,6 +5,9 @@ from os import mkdir
 from os.path import join
 from snprocess.model import plink, read_from_output as read
 from snprocess.model import run_command as bash
+from awk_port import awk
+from sed_port import sed
+import numpy as np
 
 def QC_1(inDir, outDir, inFile, verbose):
     """
@@ -49,6 +52,8 @@ def QC_1(inDir, outDir, inFile, verbose):
     # TODO add write to file
     output = bash('grep PROBLEM plink.sexcheck')
     output = read(output,b'PROBLEM')
+    awk([1,2])
+    np.savetxt(output,r'{}sex_discrepency.txt'.format(outDir))
 
     bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
 
