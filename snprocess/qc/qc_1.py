@@ -7,7 +7,7 @@ from snprocess.model import plink, read_from_output as read
 from snprocess.model import run_command as bash
 from awk_port import awk
 from sed_port import sed
-import numpy as np
+import pandas as pd
 
 def QC_1(inDir, outDir, inFile, verbose):
     """
@@ -52,10 +52,10 @@ def QC_1(inDir, outDir, inFile, verbose):
     # TODO add write to file
     output = bash('grep PROBLEM plink.sexcheck')
     output = read(output,'PROBLEM')
-    awk(["1","2"], output)
-    np.savetxt(output,r'{}sex_discrepency.txt'.format(outDir))
+    sd_df =  pd.DataFrame({0: output[0],1: output[1]})
+    sd_df.to_csv(sep="\t",path_or_buf='{}sex_discrepency.txt'.format(outDir),index=False)
 
-    bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
+    # bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
 
     plink(" -bfile plink --remove {}sex_discrepency.txt --make-bed".format(outDir))
 
