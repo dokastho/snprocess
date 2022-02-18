@@ -27,7 +27,7 @@ def plink(cmd):
     """Run a plink command using run_command."""
     return run_command("./bin/plink" + cmd)
 
-def read_from_output(output, key):
+def read_from_output(output, key, sep = " "):
     """Return a dataframe from command output, rows and cols established using KEY"""
     output = output.split()
     output = [(lambda elt: elt.decode("utf-8"))(elt) for elt in output]

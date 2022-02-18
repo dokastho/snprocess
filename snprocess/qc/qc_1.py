@@ -3,10 +3,9 @@
 
 from os import mkdir
 from os.path import join
-from snprocess.model import plink, read_from_output as read
+from snprocess.model import plink
+from snprocess.model import read_from_output as read
 from snprocess.model import run_command as bash
-from awk_port import awk
-from sed_port import sed
 import pandas as pd
 
 def QC_1(inDir, outDir, inFile, verbose):
@@ -66,7 +65,10 @@ def QC_1(inDir, outDir, inFile, verbose):
     # STEP 4: select autosomal SNPs only an filter out SNPs with low minor allele frequency (MAF)
 
     # select autosomal SNPs only, ie from chr 1 to 22
-    bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' plink.bim > {}snp_1_22.txt".format(outDir))
+    output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}plink.bim".format(outDir), header=None)
+    output = output[0][(output[0] >= 1) & (output[0] <= 22)]
+    output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt.txt'.format(outDir),index=False)
+
     plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
 
     # generat plot of MAF distribution
@@ -84,6 +86,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     plink(" --bfile {} --hardy".format(outFile))
 
     # select SNPs with HWE p-value below 0.00001
+    output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}plink.bim".format(outDir), header=None)
     bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outFile))
     bash("/usr/bin/Rscript --no-save hwe.R {}.hwe {}zoomhwe.hwe {}".format(outFile, outDir))
 
