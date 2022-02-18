@@ -4,6 +4,10 @@ import snprocess
 import subprocess
 import pandas as pd
 
+def isfloat(val):
+    res = val.replace('.', '', 1).isdigit()
+    return res
+
 def run_command(cmd):
     """Run a bash command and handle errors."""
     # might want to use subprocess.run instead
@@ -26,8 +30,14 @@ def plink(cmd):
 def read_from_output(output, key):
     """Return a dataframe from command output, rows and cols established using KEY"""
     output = output.split()
+    output = [(lambda elt: elt.decode("utf-8"))(elt) for elt in output]
     rows = output.count(key)
     cols = int(len(output) / rows)
     output = [output[i:i + cols] for i in range(0, len(output), cols)]
     output = pd.DataFrame(output)
+    for col in range(len(output)):
+        if output[col][0].isnumeric():
+            output[col] = output[col].astype("int")
+        elif isfloat(output[col][0]):
+            output[col] = output[col].astype("float")
     return output

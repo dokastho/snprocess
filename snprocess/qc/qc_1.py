@@ -51,8 +51,8 @@ def QC_1(inDir, outDir, inFile, verbose):
     # remove individuals with problematic sex
     # TODO add write to file
     output = bash('grep PROBLEM plink.sexcheck')
-    output = read(output,b'PROBLEM')
-    awk([[1],[2]], output)
+    output = read(output,'PROBLEM')
+    awk(["1","2"], output)
     np.savetxt(output,r'{}sex_discrepency.txt'.format(outDir))
 
     bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
