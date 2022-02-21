@@ -65,13 +65,15 @@ def QC_1(inDir, outDir, inFile, verbose):
     # STEP 4: select autosomal SNPs only an filter out SNPs with low minor allele frequency (MAF)
 
     # select autosomal SNPs only, ie from chr 1 to 22
+    # bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' plink.bim > {}snp_1_22.txt".format(outDir))
     output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}plink.bim".format(outDir), header=None)
-    output = output[0][(output[0] >= 1) & (output[0] <= 22)]
-    output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt.txt'.format(outDir),index=False)
+    output = output[1][(output[0] >= 1) & (output[0] <= 22)]
+    output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt'.format(outDir),index=False)
 
-    plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
+    # TODO question 1
+    # plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
 
-    # generat plot of MAF distribution
+    # generate plot of MAF distribution
     plink(" --bfile {} --freq --out {}MAF_check".format(outFile, outDir))
 
     #visualize it
@@ -86,8 +88,10 @@ def QC_1(inDir, outDir, inFile, verbose):
     plink(" --bfile {} --hardy".format(outFile))
 
     # select SNPs with HWE p-value below 0.00001
+    # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
     output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}plink.bim".format(outDir), header=None)
-    bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outFile))
+    output = output[0][(output[8] < .0001)]
+    output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
     bash("/usr/bin/Rscript --no-save hwe.R {}.hwe {}zoomhwe.hwe {}".format(outFile, outDir))
 
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
@@ -131,15 +135,20 @@ def QC_1(inDir, outDir, inFile, verbose):
     plink(" --bfile plink --extract {}indepSNP.prune.in --genome --min 0.2 --out {}pihat_min0.2".format(outDir, outDir))
 
     # visualize relations. But there will be none! or should be none!
-    bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
+    # bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
+    output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=None)
+    output = output[0][(output[7] > 0.9)]
+    output.to_csv(sep="\t",path_or_buf='{}zoom_pihat.genome'.format(outDir),index=False)
 
     bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
     # we shouldn't have any parent offspring relationships! but let's see if anything pops up
-    bash("awk '{ if ($8 > 0.9) print $0 }' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
+    # bash("awk '{ if ($8 > 0.9) print $0 }' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
+    # output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=None)
+    # TODO duplicate lines?
 
     # visualize
-    bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
+    # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
 
     #if there is anyone with a piHat more than 0.2, remove them!
