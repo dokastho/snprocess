@@ -92,7 +92,8 @@ def QC_1(inDir, outDir, inFile, verbose):
     output = pd.read_csv(delim_whitespace = True,filepath_or_buffer="{}plink.hwe".format(outDir), header=[0])
     output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
     output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
-    bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoomhwe.hwe {}".format(outDir,outDir))
+    # TODO
+    # bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoomhwe.hwe {}".format(outDir,outDir))
 
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
@@ -117,7 +118,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     plink(" --bfile plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format( outDir, outDir))
 
     # plot the heterogygosity rate
-    bash("RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
+    bash("/usr/bin/RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
 
     # list the individuals more than 3 sd away from the heterozygosity rate mean.
     bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
