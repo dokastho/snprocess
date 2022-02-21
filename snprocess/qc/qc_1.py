@@ -74,18 +74,18 @@ def QC_1(inDir, outDir, inFile, verbose):
     plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
 
     # generate plot of MAF distribution
-    plink(" --bfile {} --freq --out {}MAF_check".format(outFile, outDir))
+    plink(" --bfile plink --freq --out {}MAF_check".format(outDir))
 
     #visualize it
     bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
-    plink(" --bfile {} --maf 0.005 --make-bed".format(outFile, outFile))
+    plink(" --bfile plink --maf 0.005 --make-bed")
 
     ####################################################
     # STEP 5: Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
 
-    plink(" --bfile {} --hardy".format(outFile))
+    plink(" --bfile plink --hardy")
 
     # select SNPs with HWE p-value below 0.00001
     # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
@@ -111,7 +111,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    plink(" --bfile plink --indep-pairwise 50 5 0.5 --out {}indepSNP")
+    plink(" --bfile plink --indep-pairwise 50 5 0.5 --out {}indepSNP".format(outDir))
 
     # get the pruned data set
     plink(" --bfile plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format( outDir, outDir))
