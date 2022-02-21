@@ -89,10 +89,10 @@ def QC_1(inDir, outDir, inFile, verbose):
 
     # select SNPs with HWE p-value below 0.00001
     # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
-    output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}plink.bim".format(outDir), header=None)
-    output = output[0][(output[8] < .0001)]
+    output = pd.read_csv(delim_whitespace = True,filepath_or_buffer="{}plink.hwe".format(outDir), header=[0])
+    output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
     output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
-    bash("/usr/bin/Rscript --no-save hwe.R {}.hwe {}zoomhwe.hwe {}".format(outFile, outDir))
+    bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoomhwe.hwe {}".format(outDir,outDir))
 
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
@@ -136,8 +136,8 @@ def QC_1(inDir, outDir, inFile, verbose):
 
     # visualize relations. But there will be none! or should be none!
     # bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
-    output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=None)
-    output = output[0][(output[7] > 0.9)]
+    output = pd.read_csv(delim_whitespace = True,filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=[0])
+    output = output[output.columns[0]][(output[output.columns[7]] > 0.9)]
     output.to_csv(sep="\t",path_or_buf='{}zoom_pihat.genome'.format(outDir),index=False)
 
     bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
