@@ -71,7 +71,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt'.format(outDir),index=False)
 
     # TODO question 1
-    # plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
+    plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
 
     # generate plot of MAF distribution
     plink(" --bfile {} --freq --out {}MAF_check".format(outFile, outDir))
