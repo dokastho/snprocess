@@ -93,7 +93,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
     output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
     # TODO
-    # bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoomhwe.hwe {}".format(outDir,outDir))
+    bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoom.hwe {}foo".format(outDir,outDir))
 
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
