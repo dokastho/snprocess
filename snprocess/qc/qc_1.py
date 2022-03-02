@@ -7,6 +7,7 @@ from snprocess.model import plink
 from snprocess.model import read_from_output as read
 from snprocess.model import run_command as bash
 import pandas as pd
+import json
 
 def QC_1(inDir, outDir, inFile, verbose):
     """
