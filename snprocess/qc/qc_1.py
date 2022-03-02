@@ -118,15 +118,18 @@ def QC_1(inDir, outDir, inFile, verbose):
     plink(" --bfile plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format( outDir, outDir))
 
     # plot the heterogygosity rate
-    bash("/usr/bin/RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
+    # TODO
+    # bash("/usr/bin/RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
 
     # list the individuals more than 3 sd away from the heterozygosity rate mean.
-    bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
+    # TODO
+    # bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
 
     # need to exclude these individuals from the analysis.
-    bash('''sed 's/"// g' {}fail-het-qc.txt | awk '{print $1, $2}' > {}het-fail-ind.txt'''.format(outDir, outDir))
+    # TODO
+    # bash('''sed 's/"// g' {}fail-het-qc.txt | awk '{print $1, $2}' > {}het-fail-ind.txt'''.format(outDir, outDir))
 
-    plink(" --bfile plink --remove {}het-fail-ind.txt --make-bed".format(outDir))
+    # plink(" --bfile plink --remove {}het-fail-ind.txt --make-bed".format(outDir))
 
     ############################################################
     # STEP 7: Relatedness
@@ -140,8 +143,9 @@ def QC_1(inDir, outDir, inFile, verbose):
     output = pd.read_csv(delim_whitespace = True,filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=[0])
     output = output[output.columns[0]][(output[output.columns[7]] > 0.9)]
     output.to_csv(sep="\t",path_or_buf='{}zoom_pihat.genome'.format(outDir),index=False)
-
-    bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
+    
+    # TODO
+    # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
     # we shouldn't have any parent offspring relationships! but let's see if anything pops up
     # bash("awk '{ if ($8 > 0.9) print $0 }' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
