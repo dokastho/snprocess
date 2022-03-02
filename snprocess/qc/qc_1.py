@@ -26,26 +26,27 @@ def QC_1(inDir, outDir, inFile, verbose):
     
     ####################################################
     # STEP 1: check missingness and generate plots
-    plink(" --bfile {} --missing".format(inFile))
+    plink(" --bfile {} --missing --out {}plink".format(inFile, outDir))
 
-    bash("/usr/bin/Rscript --no-save hist_miss.R plink.imiss plink.lmiss {}".format(outDir))
+    bash("/usr/bin/Rscript --no-save hist_miss.R {}plink.imiss {}plink.lmiss {}".format(outDir,outDir,outDir))
 
     ####################################################
     # STEP 2: remove individuals with high missingness.. They recommend using a less stringent filter and then following it with a more stringent filter. Even the more stringent filter is more relaxed than Srijan's
     # Also, they filter on SNP missingness and indivudal missingness. Srijan first filters on individual missingness and then on SNPs much later
 
     # filter SNPs at 0.01
-    plink(" --bfile {} --geno 0.01 --make-bed".format(inFile))
+    plink(" --bfile {} --geno 0.01 --make-bed --out {}plink".format(inFile, outDir))
 
     # filter individuals at 0.2
-    plink(" --bfile plink --mind 0.05 --make-bed")
+    plink(" --bfile plink --mind 0.05 --make-bed --out {}plink".format(outDir))
 
     ####################################################
     # STEP 3: sexcheck
-    plink(" --bfile plink --check-sex")
+    plink(" --bfile plink --check-sex --out {}plink".format(outDir))
 
     # visualize the sex check
-    bash("/usr/bin/Rscript --no-save sex_check.R plink.sexcheck {}".format(outDir))
+    # TODO
+    # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
 
     # remove individuals with problematic sex
     # TODO add write to file
@@ -56,7 +57,7 @@ def QC_1(inDir, outDir, inFile, verbose):
 
     # bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
 
-    plink(" -bfile plink --remove {}sex_discrepency.txt --make-bed".format(outDir))
+    plink(" -bfile plink --remove {}sex_discrepency.txt --make-bed --out {}plink".format(outDir, outDir))
 
     # impute sex... (not sure why this is necessary). NOT RUNNING IT
     #plink -bfile ${outFile}_5 --impute-sex --make-bed --out ${outFile}_6
@@ -71,7 +72,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt'.format(outDir),index=False)
 
     # TODO question 1
-    plink(" --bfile plink --extract {}snp_1_22.txt --make-bed".format(outDir))
+    plink(" --bfile plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir))
 
     # generate plot of MAF distribution
     plink(" --bfile plink --freq --out {}MAF_check".format(outDir))
@@ -80,12 +81,12 @@ def QC_1(inDir, outDir, inFile, verbose):
     bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
-    plink(" --bfile plink --maf 0.005 --make-bed")
+    plink(" --bfile plink --maf 0.005 --make-bed --out {}plink".format(outDir))
 
     ####################################################
     # STEP 5: Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
 
-    plink(" --bfile plink --hardy")
+    plink(" --bfile plink --hardy --out {}plink".format(outDir))
 
     # select SNPs with HWE p-value below 0.00001
     # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
@@ -98,7 +99,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     #plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
-    plink(" --bfile plink --hwe 1e-10 --hwe-all --make-bed")
+    plink(" --bfile plink --hwe 1e-10 --hwe-all --make-bed --out {}plink".format(outDir))
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning

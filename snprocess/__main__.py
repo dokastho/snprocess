@@ -18,7 +18,7 @@ def main(phase, verbose):
     if phase == 1 or phase == 0:
         inDir = fileRoute + "/Phase1/input/"
         # outDir = fileRoute + "/Phase1/qc/"
-        outDir = "testout"
+        outDir = "testout/"
         inFile = "merge"
         QC_1(inDir, outDir, inFile, verbose)
         QC_2()
