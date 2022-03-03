@@ -9,7 +9,7 @@ from snprocess.model import run_command as bash
 import pandas as pd
 import json
 
-def QC_1(inDir, outDir, inFile, verbose):
+def QC_1(verbose, j = "default.json"):
     """
     Handle data from /PRS/phase3/scripts/QC_1.sh.
     inDir: input files directory, relative link
@@ -21,6 +21,11 @@ def QC_1(inDir, outDir, inFile, verbose):
         mkdir(join(outDir))
     except:
         pass
+
+    opts = json.load(j)
+    inDir = opts['inDir']
+    inFile = opts['inFile']
+    outDir = opts['outDir']
 
     outFile = join(outDir, inFile)
     inFile = join(inDir, inFile)
@@ -36,10 +41,10 @@ def QC_1(inDir, outDir, inFile, verbose):
     # Also, they filter on SNP missingness and indivudal missingness. Srijan first filters on individual missingness and then on SNPs much later
 
     # filter SNPs at 0.01
-    plink(" --bfile {} --geno 0.01 --make-bed --out {}plink".format(inFile, outDir))
+    plink(" --bfile {} --geno {} --make-bed --out {}plink".format(inFile, opts['geno'], outDir))
 
-    # filter individuals at 0.2
-    plink(" --bfile plink --mind 0.05 --make-bed --out {}plink".format(outDir))
+    # filter individuals at 0.05
+    plink(" --bfile plink --mind {} --make-bed --out {}plink".format(opts['mind'], outDir))
 
     ####################################################
     # STEP 3: sexcheck
@@ -82,7 +87,8 @@ def QC_1(inDir, outDir, inFile, verbose):
     bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
-    plink(" --bfile plink --maf 0.005 --make-bed --out {}plink".format(outDir))
+    # maf filter at 0.005
+    plink(" --bfile plink --maf {} --make-bed --out {}plink".format(opts['maf'], outDir))
 
     ####################################################
     # STEP 5: Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
@@ -114,7 +120,7 @@ def QC_1(inDir, outDir, inFile, verbose):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    plink(" --bfile plink --indep-pairwise 50 5 0.5 --out {}indepSNP".format(outDir))
+    plink(" --bfile plink --indep-pairwise {} {} {} --out {}indepSNP".format(opts['indep_pairwise'][0], opts['indep_pairwise'][1], opts['indep_pairwise'][2], outDir))
 
     # get the pruned data set
     plink(" --bfile plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format( outDir, outDir))
@@ -137,8 +143,8 @@ def QC_1(inDir, outDir, inFile, verbose):
     # STEP 7: Relatedness
 
     # This step isn't there in Yu's workflow, because it shouldn't really be necessary.
-
-    plink(" --bfile plink --extract {}indepSNP.prune.in --genome --min 0.2 --out {}pihat_min0.2".format(outDir, outDir))
+    # relatedness @0.2
+    plink(" --bfile plink --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(outDir, opts['relatedness'], outDir))
 
     # visualize relations. But there will be none! or should be none!
     # bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
