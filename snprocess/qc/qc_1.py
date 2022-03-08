@@ -21,7 +21,8 @@ def QC_1(verbose, j = "default.json"):
         mkdir(join(outDir))
     except:
         pass
-    with open(j, 'rw') as opts:
+    opts = json.load(j)
+    with open("markup.json", 'rw') as markup:
         inDir = opts['inDir']
         inFile = opts['inFile']
         outDir = opts['outDir']
@@ -52,7 +53,7 @@ def QC_1(verbose, j = "default.json"):
         # visualize the sex check
         # TODO
         # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
-        json.dump('sexcheck', opts)
+        json.dump('{}sexcheck.pdf'.format(outDir), markup)
 
         # remove individuals with problematic sex
         # TODO add write to file
