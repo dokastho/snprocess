@@ -4,6 +4,7 @@ from snprocess.qc.qc_2 import QC_2
 from snprocess.model import make_bed
 import click
 import json
+import os
 
 
 @click.command()
@@ -14,10 +15,15 @@ def main(phase, verbose):
     Run all scripts on 'Phase' passed in as argument. Input 0 to run on all phases
     """
 
+    markup = {
+        "phases": []
+    }
+
     # Phase 1 #################################
     if phase == 1 or phase == 0:
         settings = json.load(open("phase1.json"))
-        QC_1(verbose, settings)
+        p1 = QC_1(verbose, settings, 1)
+        markup['phases'].append(p1)
         # QC_2()
 
     # Phase 2 #################################
@@ -37,7 +43,8 @@ def main(phase, verbose):
         inFile = make_bed(inDir, inFile)
         QC_1(inDir, outDir, inFile, verbose)
         # QC_2()
-
+    
+    json.dump(markup, open("context.json", "w"), indent = 4)
 
 if __name__ == "__main__":
     main()

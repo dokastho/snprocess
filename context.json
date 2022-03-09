@@ -1,40 +1,45 @@
 {
-    "graphs": [
+    "phases": [
         {
-            "name": "Histogram individual missingness",
-            "file": "testout/Hist-individualMissingness.pdf"
-        },
-        {
-            "name": "Histogram SNP missingness",
-            "file": "testout/Hist-snpMissingness.pdf"
-        },
-        {
-            "name": "Gender Sexcheck",
-            "file": "testout/Gender_check.pdf"
-        },
-        {
-            "name": "Male Sexcheck",
-            "file": "testout/Men_check.pdf"
-        },
-        {
-            "name": "Female Sexcheck",
-            "file": "testout/Women_check.pdf"
-        },
-        {
-            "name": "MAF Distribution",
-            "file": "testout/MAF_distribution.pdf"
-        },
-        {
-            "name": "Histogram HWE",
-            "file": "testout/HWE_Histogram.pdf"
-        },
-        {
-            "name": "Histogram HWE: strongly deviating SNPs only",
-            "file": "testout/HWE_below_theshold_Histogram.pdf"
-        },
-        {
-            "name": "Heterozygosity Rate",
-            "file": "testout/heterozygosity.pdf"
+            "phase": 1,
+            "graphs": [
+                {
+                    "name": "Histogram individual missingness",
+                    "file": "testout/Hist-individualMissingness.pdf"
+                },
+                {
+                    "name": "Histogram SNP missingness",
+                    "file": "testout/Hist-snpMissingness.pdf"
+                },
+                {
+                    "name": "Gender Sexcheck",
+                    "file": "testout/Gender_check.pdf"
+                },
+                {
+                    "name": "Male Sexcheck",
+                    "file": "testout/Men_check.pdf"
+                },
+                {
+                    "name": "Female Sexcheck",
+                    "file": "testout/Women_check.pdf"
+                },
+                {
+                    "name": "MAF Distribution",
+                    "file": "testout/MAF_distribution.pdf"
+                },
+                {
+                    "name": "Histogram HWE",
+                    "file": "testout/HWE_Histogram.pdf"
+                },
+                {
+                    "name": "Histogram HWE: strongly deviating SNPs only",
+                    "file": "testout/HWE_below_theshold_Histogram.pdf"
+                },
+                {
+                    "name": "Heterozygosity Rate",
+                    "file": "testout/heterozygosity.pdf"
+                }
+            ]
         }
     ]
 }

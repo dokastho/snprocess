@@ -11,7 +11,7 @@ import pandas as pd
 import json
 
 
-def QC_1(verbose, opts):
+def QC_1(verbose, opts, phase):
     """
     Handle data from /PRS/phase3/scripts/QC_1.sh.
     inDir: input files directory, relative link
@@ -24,7 +24,8 @@ def QC_1(verbose, opts):
     except:
         pass
 
-    markup = {
+    data = {
+        "phase": phase,
         "graphs": []
     }
 
@@ -41,7 +42,7 @@ def QC_1(verbose, opts):
     lmiss = read_snp_data(outDir, "plink.lmiss", head=0)
     g.hist_miss(imiss, lmiss, outDir)
 
-    markup['graphs'] = markup['graphs'] + [
+    data['graphs'] = data['graphs'] + [
         {
             "name": "Histogram individual missingness",
             "file": outDir + "Hist-individualMissingness.pdf"
@@ -73,7 +74,7 @@ def QC_1(verbose, opts):
     sc = read_snp_data(outDir, "plink.sexcheck", head=0)
     g.sexcheck(sc, outDir)
     # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
-    markup['graphs'] = markup['graphs'] + [
+    data['graphs'] = data['graphs'] + [
         {
             "name": "Gender Sexcheck",
             "file": outDir + "Gender_check.pdf"
@@ -121,7 +122,7 @@ def QC_1(verbose, opts):
 
     frq = read_snp_data(outDir, "MAF_check.frq", head=0)
     g.maf_check(frq, outDir)
-    markup['graphs'].append({
+    data['graphs'].append({
         "name": "MAF Distribution",
         "file": outDir + "MAF_distribution.pdf"
     })
@@ -150,7 +151,7 @@ def QC_1(verbose, opts):
     zoom = read_snp_data(outDir, "zoom.hwe", head=0)
     g.hwe(hwe_df, zoom, outDir)
 
-    markup['graphs'] = markup['graphs'] + [
+    data['graphs'] = data['graphs'] + [
         {
             "name": "Histogram HWE",
             "file": outDir + "HWE_Histogram.pdf"
@@ -190,7 +191,7 @@ def QC_1(verbose, opts):
     df = read_snp_data(outDir, "R_hetCheck.het", head = 0)
     g.heterozygosity_rate(df, outDir)
 
-    markup['graphs'].append({
+    data['graphs'].append({
         "name": "Heterozygosity Rate",
         "file": outDir + "heterozygosity.pdf"
     })
@@ -233,5 +234,5 @@ def QC_1(verbose, opts):
     # TODO
     # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
-    json.dump(markup, open("context.json", "w"), indent = 4)
     clean(outDir)
+    return data
