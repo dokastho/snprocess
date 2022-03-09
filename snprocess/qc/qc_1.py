@@ -144,6 +144,7 @@ def QC_1(verbose, opts):
 
         df["HET_RATE"] = (df['N.NM.'] - df['O.HOM.']) / df['N.NM.']
 
+        het_fail: pd.DataFrame
         het_fail = df[(df['HET_RATE'] < mean(df['HET_RATE']) - 3 * stdev(df['HET_RATE'])) or (df['HET_RATE'] > mean(df['HET_RATE']) + 3 * stdev(df['HET_RATE']))]
         het_fail['HET_DST'] = (het_fail['HET_RATE'] - mean(df['HET_RATE']) / stdev(df['HET_RATE']))
         het_fail.to_csv(tbl)

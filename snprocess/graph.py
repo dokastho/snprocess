@@ -97,3 +97,7 @@ def heterozygosity_rate(df: pandas.DataFrame,outputDir):
     plt.title("Heterozygosity Rate")
     plt.savefig(fig)
     plt.clf()
+
+
+# def relatedness(rel_df, zoom_df, outputDir):
+#     fig = join(outputDir + "relatedness.pdf")
