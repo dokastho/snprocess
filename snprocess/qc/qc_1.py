@@ -1,5 +1,4 @@
 """First step in data handling."""
-# TODO update lines using where() so that names work
 
 from os import mkdir
 from os.path import join
@@ -17,7 +16,7 @@ def QC_1(verbose, opts):
     outDir: input files directory, relative link
     inFile: format for input file
     """
-    # args vary by phase, make a driver file to manage this TODO
+    # args vary by phase, fix driver file to manage this TODO
     try:
         mkdir(join(outDir))
     except:
@@ -58,7 +57,6 @@ def QC_1(verbose, opts):
         json.dump('{}sexcheck.pdf'.format(outDir), markup)
 
         # remove individuals with problematic sex
-        # TODO add write to file
         output = bash('grep PROBLEM {}plink.sexcheck'.format(outDir))
         output = read(output,'PROBLEM')
         sd_df =  pd.DataFrame({0: output[0],1: output[1]})
@@ -80,7 +78,6 @@ def QC_1(verbose, opts):
         output = output[1][(output[0] >= 1) & (output[0] <= 22)]
         output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt'.format(outDir),index=False)
 
-        # TODO question 1
         plink(" --bfile {}plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir, outDir))
 
         # generate plot of MAF distribution
@@ -104,6 +101,9 @@ def QC_1(verbose, opts):
         output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
         output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
         # TODO
+        hwe_df = read_snp_data(outDir, "plink.hwe")
+        zoom = read_snp_data(outDir, "zoom.hwe")
+        g.hwe(hwe_df, zoom, outDir)
         # bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoom.hwe {}foo".format(outDir,outDir))
 
         # now delete them. We don'd have cae / controls, so filter all at 1e-10
@@ -170,5 +170,5 @@ def QC_1(verbose, opts):
         #if there is anyone with a piHat more than 0.2, remove them!
 
 
-        clean()
+        clean(outDir)
 

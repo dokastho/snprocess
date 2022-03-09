@@ -1,40 +1,55 @@
-import os
+from os.path import join
 import matplotlib.pyplot as plt
+
 
 def hist_miss(indmiss, snpmiss, outputDir):
     """
     indmiss: table
     snpmiss: table
     """
-    ind = os.path.join(outputDir + "Hist-individualMissingness.pdf")
-    snp = os.path.join(outputDir + "Hist-snpMissingness.pdf")
+    ind = join(outputDir + "Hist-individualMissingness.pdf")
+    snp = join(outputDir + "Hist-snpMissingness.pdf")
 
     indCol = indmiss.columns[5]
     snpCol = snpmiss.columns[4]
 
-    plt.hist(indmiss[indCol], label="Histogram individual missingness" )
-    plt.savefig(ind, format = "pdf")
-    plt.hist(snpmiss[snpCol], label="Histogram SNP missingness" )
-    plt.savefig(snp, format = "pdf")
+    plt.hist(indmiss[indCol])
+    plt.title("Histogram individual missingness")
+    plt.savefig(ind, format="pdf")
+    plt.hist(snpmiss[snpCol])
+    plt.title("Histogram SNP missingness")
+    plt.savefig(snp, format="pdf")
+
 
 def sexcheck(df, outputDir):
-    gender = os.path.join(outputDir + "Gender_check.pdf")
-    women = os.path.join(outputDir + "Women_check.pdf")
-    men = os.path.join(outputDir + "Men_check.pdf")
+    gender = join(outputDir + "Gender_check.pdf")
+    women = join(outputDir + "Women_check.pdf")
+    men = join(outputDir + "Men_check.pdf")
 
     col = df.columns[5]
 
-    plt.hist(df[col], label = "Gender")
+    plt.hist(df[col])
+    plt.title("Gender")
     plt.xlabel("F")
     plt.savefig(gender)
 
     m = df[df['PEDSEX'] == 1]
     f = df[df['PEDSEX'] == 2]
 
-    plt.hist(m[col], label = "Men")
+    plt.hist(m[col])
+    plt.title("Men")
     plt.xlabel("F")
     plt.savefig(men)
 
-    plt.hist(f[col], label = "Women")
+    plt.hist(f[col])
+    plt.title("Women")
     plt.xlabel("F")
     plt.savefig(women)
+
+
+def hwe(hwe_df, zoom, outputDir):
+    fig = join(outputDir + "HWE_Histogram.pdf")
+
+    col = hwe_df.columns[8]
+
+    plt.hist(hwe_df[col], label = "Histogram HWE")
