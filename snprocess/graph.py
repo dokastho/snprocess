@@ -16,9 +16,12 @@ def hist_miss(indmiss, snpmiss, outputDir):
     plt.hist(indmiss[indCol])
     plt.title("Histogram individual missingness")
     plt.savefig(ind, format="pdf")
+    plt.clf()
+
     plt.hist(snpmiss[snpCol])
     plt.title("Histogram SNP missingness")
     plt.savefig(snp, format="pdf")
+    plt.clf()
 
 
 def sexcheck(df, outputDir):
@@ -32,6 +35,7 @@ def sexcheck(df, outputDir):
     plt.title("Gender")
     plt.xlabel("F")
     plt.savefig(gender)
+    plt.clf()
 
     m = df[df['PEDSEX'] == 1]
     f = df[df['PEDSEX'] == 2]
@@ -40,11 +44,13 @@ def sexcheck(df, outputDir):
     plt.title("Men")
     plt.xlabel("F")
     plt.savefig(men)
+    plt.clf()
 
     plt.hist(f[col])
     plt.title("Women")
     plt.xlabel("F")
     plt.savefig(women)
+    plt.clf()
 
 
 def hwe(hwe_df, zoom, outputDir):
@@ -52,4 +58,16 @@ def hwe(hwe_df, zoom, outputDir):
 
     col = hwe_df.columns[8]
 
-    plt.hist(hwe_df[col], label = "Histogram HWE")
+    plt.hist(hwe_df[col])
+    plt.title("Histogram HWE")
+    plt.savefig(fig)
+    plt.clf()
+
+    fig = join(outputDir + "HWE_below_theshold_Histogram.pdf")
+
+    col = zoom.columns[8]
+
+    plt.hist(zoom[col])
+    plt.title("Histogram HWE: strongly deviating SNPs only")
+    plt.savefig(fig)
+    plt.clf()

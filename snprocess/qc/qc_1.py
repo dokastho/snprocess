@@ -84,7 +84,10 @@ def QC_1(verbose, opts):
         plink(" --bfile {}plink --freq --out {}MAF_check".format(outDir, outDir))
 
         #visualize it
-        bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
+        # TODO
+        frq = read_snp_data(outDir, "MAF_check.frq", head = 0)
+        g.
+        # bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
         # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
         # maf filter at 0.005
@@ -98,11 +101,13 @@ def QC_1(verbose, opts):
         # select SNPs with HWE p-value below 0.00001
         # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
         output = read_snp_data(outDir, "plink.hwe",head=0)
-        output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
+        # output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
+        # TODO question about data table
+        output = output[(output[output.columns[8]] < .0001)]
         output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
-        # TODO
-        hwe_df = read_snp_data(outDir, "plink.hwe")
-        zoom = read_snp_data(outDir, "zoom.hwe")
+
+        hwe_df = read_snp_data(outDir, "plink.hwe", head = 0)
+        zoom = read_snp_data(outDir, "zoom.hwe", head = 0)
         g.hwe(hwe_df, zoom, outDir)
         # bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoom.hwe {}foo".format(outDir,outDir))
 
