@@ -84,9 +84,9 @@ def QC_1(verbose, opts):
         plink(" --bfile {}plink --freq --out {}MAF_check".format(outDir, outDir))
 
         #visualize it
-        # TODO
+
         frq = read_snp_data(outDir, "MAF_check.frq", head = 0)
-        g.
+        g.maf_check(frq, outDir)
         # bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
         # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
@@ -162,18 +162,6 @@ def QC_1(verbose, opts):
         
         # TODO
         # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
-
-        # we shouldn't have any parent offspring relationships! but let's see if anything pops up
-        # bash("awk '{ if ($8 > 0.9) print $0 }' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
-        # output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=None)
-        # TODO duplicate lines?
-
-        # visualize
-        # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
-
-
-        #if there is anyone with a piHat more than 0.2, remove them!
-
 
         clean(outDir)
 
