@@ -29,10 +29,10 @@ def QC_1(verbose, opts, phase):
         "graphs": []
     }
 
-    inDir = opts['fileroute'] + opts['inDir']
+    inDir = opts['fileroute'] + "Phase{}".format(phase) + "/input/"
     inFile = inDir + opts['inFile']
-    # outDir = opts['fileroute'] + opts['outDir']
-    outDir = opts['outDir']
+    outDir = opts['fileroute'] + opts['outDir']
+    # outDir = opts['outDir']
 
     ####################################################
     # STEP 1: check missingness and generate plots

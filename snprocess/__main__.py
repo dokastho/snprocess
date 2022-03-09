@@ -10,7 +10,8 @@ import os
 @click.command()
 @click.argument('phase', type=click.INT, default = 0)
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
-def main(phase, verbose):
+@click.option('-s', '--settings', type=click.STRING, help='input json for custom settings')
+def main(phase, verbose, settings):
     """
     Run all scripts on 'Phase' passed in as argument. Input 0 to run on all phases
     """
@@ -19,29 +20,30 @@ def main(phase, verbose):
         "phases": []
     }
 
+    if settings is None:
+        settings = "default.json"
+    settings = json.load(open(settings))
+
     # Phase 1 #################################
     if phase == 1 or phase == 0:
-        settings = json.load(open("phase1.json"))
-        p1 = QC_1(verbose, settings, 1)
-        markup['phases'].append(p1)
+        p = QC_1(verbose, settings, 1)
+        markup['phases'].append(p)
         # QC_2()
 
     # Phase 2 #################################
-    elif phase == 2 or phase == 0:
-        inDir = "../data/input/"
-        outDir = "../data/qc/"
+    if phase == 2 or phase == 0:
         inFile = "Reports"
-        inFile = make_bed(inDir, inFile)
-        QC_1(inDir, outDir, inFile, verbose)
+        make_bed(settings['inDir'], inFile)
+        p = QC_1(verbose, settings, 2)
+        markup['phases'].append(p)
         # QC_2()
 
     # Phase 3 #################################
-    elif phase == 3 or phase == 0:
-        inDir = "../data/input/"
-        outDir = "../data/qc/"
+    if phase == 3 or phase == 0:
         inFile = "Reports"
         inFile = make_bed(inDir, inFile)
-        QC_1(inDir, outDir, inFile, verbose)
+        p = QC_1(verbose, settings, 2)
+        markup['phases'].append(p)
         # QC_2()
     
     json.dump(markup, open("context.json", "w"), indent = 4)
