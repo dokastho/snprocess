@@ -35,7 +35,7 @@ def QC_1(verbose, opts):
         imiss = read_snp_data(outDir, "plink.imiss", head=0)
         lmiss = read_snp_data(outDir, "plink.lmiss", head=0)
         g.hist_miss(imiss, lmiss, outDir)
-        bash("/usr/bin/Rscript --no-save hist_miss.R {}plink.imiss {}plink.lmiss {}".format(outDir,outDir,outDir))
+        # bash("/usr/bin/Rscript --no-save hist_miss.R {}plink.imiss {}plink.lmiss {}".format(outDir,outDir,outDir))
 
         ####################################################
         # STEP 2: remove individuals with high missingness.. They recommend using a less stringent filter and then following it with a more stringent filter. Even the more stringent filter is more relaxed than Srijan's
@@ -52,7 +52,8 @@ def QC_1(verbose, opts):
         plink(" --bfile {}plink --check-sex --out {}plink".format(outDir, outDir))
 
         # visualize the sex check
-        # TODO
+        sc = read_snp_data(outDir, "plink.sexcheck", head=0)
+        g.sexcheck(sc, outDir)
         # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
         json.dump('{}sexcheck.pdf'.format(outDir), markup)
 
