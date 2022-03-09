@@ -53,6 +53,18 @@ def sexcheck(df, outputDir):
     plt.clf()
 
 
+def maf_check(df, outputDir):
+    fig = join(outputDir + "MAF_distribution.pdf")
+
+    col = df.columns[4]
+
+    plt.hist(df[col])
+    plt.title("MAF distribution")
+    plt.xlabel("MAF")
+    plt.savefig(fig)
+    plt.clf()
+
+
 def hwe(hwe_df, zoom, outputDir):
     fig = join(outputDir + "HWE_Histogram.pdf")
 
