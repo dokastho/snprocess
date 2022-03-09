@@ -28,9 +28,10 @@ def main(phase, verbose, settings):
     phases = glob.glob(settings['fileroute'] + 'Phase*')
 
     if phase != 0:
-        phases = phases[phase]
+        phases = [phases[phase - 1]]
 
     for ph in phases:
+        ph += "/"
         if 'Phase1' in ph:
             inDir = "input/"
         else:
@@ -38,18 +39,8 @@ def main(phase, verbose, settings):
             make_bed(ph + inDir, "Reports")
         inDir = ph + inDir
 
-    # Phase 1 #################################
-    if phase == 1 or phase == 0:
-        p = QC_1(verbose, settings, 1)
+        p = QC_1(verbose, settings, 1, inDir)
         markup['phases'].append(p)
-        # QC_2()
-
-    # Phase 2 #################################
-    if phase == 2 or phase == 0:
-        make_bed(opts['fileroute'] + "Phase2/data/input/", "Reports")
-        p = QC_1(verbose, settings, 2)
-        markup['phases'].append(p)
-        # QC_2()
     
     json.dump(markup, open("context.json", "w"), indent = 4)
 
