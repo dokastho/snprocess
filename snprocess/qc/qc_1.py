@@ -3,9 +3,10 @@
 
 from os import mkdir
 from os.path import join
-from snprocess.model import plink
+from snprocess.model import plink, read_snp_data
 from snprocess.model import read_from_output as read
 from snprocess.model import run_command as bash
+import snprocess.graph as g
 import pandas as pd
 import json
 
@@ -31,6 +32,9 @@ def QC_1(verbose, opts):
         # STEP 1: check missingness and generate plots
         plink(" --bfile {} --missing --out {}plink".format(inFile, outDir))
 
+        imiss = read_snp_data(outDir, "plink.imiss", head=0)
+        lmiss = read_snp_data(outDir, "plink.lmiss", head=0)
+        g.hist_miss(imiss, lmiss, outDir)
         bash("/usr/bin/Rscript --no-save hist_miss.R {}plink.imiss {}plink.lmiss {}".format(outDir,outDir,outDir))
 
         ####################################################
@@ -54,7 +58,7 @@ def QC_1(verbose, opts):
 
         # remove individuals with problematic sex
         # TODO add write to file
-        output = bash('grep PROBLEM plink.sexcheck')
+        output = bash('grep PROBLEM {}plink.sexcheck'.format(outDir))
         output = read(output,'PROBLEM')
         sd_df =  pd.DataFrame({0: output[0],1: output[1]})
         sd_df.to_csv(sep="\t",path_or_buf='{}sex_discrepency.txt'.format(outDir),index=False)
@@ -71,7 +75,7 @@ def QC_1(verbose, opts):
 
         # select autosomal SNPs only, ie from chr 1 to 22
         # bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' plink.bim > {}snp_1_22.txt".format(outDir))
-        output = pd.read_csv(delimiter="\t",filepath_or_buffer="{}plink.bim".format(outDir), header=None)
+        output = read_snp_data(outDir, "plink.bim")
         output = output[1][(output[0] >= 1) & (output[0] <= 22)]
         output.to_csv(sep="\t",path_or_buf='{}snp_1_22.txt'.format(outDir),index=False)
 
@@ -95,7 +99,7 @@ def QC_1(verbose, opts):
 
         # select SNPs with HWE p-value below 0.00001
         # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
-        output = pd.read_csv(delim_whitespace = True,filepath_or_buffer="{}plink.hwe".format(outDir), header=[0])
+        output = read_snp_data(outDir, "plink.hwe",head=0)
         output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
         output.to_csv(sep="\t",path_or_buf='{}zoom.hwe'.format(outDir),index=False)
         # TODO
@@ -146,7 +150,7 @@ def QC_1(verbose, opts):
 
         # visualize relations. But there will be none! or should be none!
         # bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
-        output = pd.read_csv(delim_whitespace = True,filepath_or_buffer="{}pihat_min0.2.genome".format(outDir), header=[0])
+        output = read_snp_data(outDir, "pihat_min0.2.genome", head=0)
         output = output[output.columns[0]][(output[output.columns[7]] > 0.9)]
         output.to_csv(sep="\t",path_or_buf='{}zoom_pihat.genome'.format(outDir),index=False)
         

@@ -41,3 +41,6 @@ def read_from_output(output, key, sep = " "):
         elif isfloat(output[col][0]):
             output[col] = output[col].astype("float")
     return output
+
+def read_snp_data(outDir, filename, head=None):
+    return pd.read_csv(delim_whitespace = True,filepath_or_buffer=outDir + filename, header=head)
