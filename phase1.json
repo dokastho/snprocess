@@ -1,8 +1,8 @@
 {
-    "fileroute": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS",
-    "inDir": "/Phase1/input",
-    "inFile": "/merge",
-    "outDir": "/testout",
+    "fileroute": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/",
+    "inDir": "Phase1/input/",
+    "inFile": "merge",
+    "outDir": "testout/",
     "geno": 0.01,
     "mind": 0.05,
     "maf": 0.005,
