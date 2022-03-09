@@ -5,6 +5,7 @@ from snprocess.model import make_bed
 import click
 import json
 import os
+import glob
 
 
 @click.command()
@@ -24,6 +25,19 @@ def main(phase, verbose, settings):
         settings = "default.json"
     settings = json.load(open(settings))
 
+    phases = glob.glob(settings['fileroute'] + 'Phase*')
+
+    if phase != 0:
+        phases = phases[phase]
+
+    for ph in phases:
+        if 'Phase1' in ph:
+            inDir = "input/"
+        else:
+            inDir = "data/input/"
+            make_bed(ph + inDir, "Reports")
+        inDir = ph + inDir
+
     # Phase 1 #################################
     if phase == 1 or phase == 0:
         p = QC_1(verbose, settings, 1)
@@ -32,16 +46,7 @@ def main(phase, verbose, settings):
 
     # Phase 2 #################################
     if phase == 2 or phase == 0:
-        inFile = "Reports"
-        make_bed(settings['inDir'], inFile)
-        p = QC_1(verbose, settings, 2)
-        markup['phases'].append(p)
-        # QC_2()
-
-    # Phase 3 #################################
-    if phase == 3 or phase == 0:
-        inFile = "Reports"
-        inFile = make_bed(inDir, inFile)
+        make_bed(opts['fileroute'] + "Phase2/data/input/", "Reports")
         p = QC_1(verbose, settings, 2)
         markup['phases'].append(p)
         # QC_2()

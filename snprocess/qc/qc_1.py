@@ -11,7 +11,7 @@ import pandas as pd
 import json
 
 
-def QC_1(verbose, opts, phase):
+def QC_1(verbose, opts, phase, inDir):
     """
     Handle data from /PRS/phase3/scripts/QC_1.sh.
     inDir: input files directory, relative link
@@ -29,10 +29,9 @@ def QC_1(verbose, opts, phase):
         "graphs": []
     }
 
-    inDir = opts['fileroute'] + "Phase{}".format(phase) + "/input/"
     inFile = inDir + opts['inFile']
-    outDir = opts['fileroute'] + opts['outDir']
-    # outDir = opts['outDir']
+    # outDir = opts['fileroute'] + opts['outDir']
+    outDir = opts['outDir']
 
     ####################################################
     # STEP 1: check missingness and generate plots

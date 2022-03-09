@@ -27,8 +27,7 @@ def make_bed(inDir, inFile):
     """Convert SNP file to binary format. Return name of binary file."""
     inFileLink = inDir + inFile
     run_command(
-        "plink --bfile {} --make-bed --out {}".format(inFileLink, inFileLink + "_binary"))
-    return inFile + "_binary"
+        "plink --bfile {} --make-bed --out {}merge".format(inFileLink, inDir))
 
 
 def plink(cmd):
