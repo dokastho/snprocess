@@ -3,6 +3,7 @@ from snprocess.qc.qc_1 import QC_1
 from snprocess.qc.qc_2 import QC_2
 from snprocess.model import make_bed
 import click
+import json
 
 
 @click.command()
@@ -13,14 +14,10 @@ def main(phase, verbose):
     Run all scripts on 'Phase' passed in as argument. Input 0 to run on all phases
     """
 
-    fileRoute = "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS"
     # Phase 1 #################################
     if phase == 1 or phase == 0:
-        inDir = fileRoute + "/Phase1/input/"
-        # outDir = fileRoute + "/Phase1/qc/"
-        outDir = "testout/"
-        inFile = "merge"
-        QC_1(inDir, outDir, inFile, verbose)
+        settings = json.load(open("phase1.json"))
+        QC_1(verbose, settings)
         QC_2()
 
     # Phase 2 #################################

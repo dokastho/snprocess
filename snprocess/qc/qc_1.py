@@ -9,7 +9,7 @@ from snprocess.model import run_command as bash
 import pandas as pd
 import json
 
-def QC_1(verbose, j = "default.json"):
+def QC_1(verbose, opts):
     """
     Handle data from /PRS/phase3/scripts/QC_1.sh.
     inDir: input files directory, relative link
@@ -21,11 +21,10 @@ def QC_1(verbose, j = "default.json"):
         mkdir(join(outDir))
     except:
         pass
-    opts = json.load(j)
-    with open("markup.json", 'rw') as markup:
-        inDir = opts['inDir']
-        inFile = opts['inFile']
-        outDir = opts['outDir']
+    with open("markup.json", 'w') as markup:
+        inDir = opts['fileroute'] + opts['inDir']
+        inFile = opts['fileroute'] + opts['inFile']
+        outDir = opts['fileroute'] + opts['outDir']
 
         outFile = join(outDir, inFile)
         inFile = join(inDir, inFile)
