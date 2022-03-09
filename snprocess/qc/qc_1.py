@@ -55,7 +55,7 @@ def QC_1(verbose, opts):
         sc = read_snp_data(outDir, "plink.sexcheck", head=0)
         g.sexcheck(sc, outDir)
         # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
-        json.dump('{}sexcheck.pdf'.format(outDir), markup)
+        json.dump({"sexcheck": "{}sexcheck.pdf".format(outDir)}, markup)
 
         # remove individuals with problematic sex
         output = bash('grep PROBLEM {}plink.sexcheck'.format(outDir))
