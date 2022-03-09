@@ -1,8 +1,9 @@
 from os.path import join
 import matplotlib.pyplot as plt
+import pandas
 
 
-def hist_miss(indmiss, snpmiss, outputDir):
+def hist_miss(indmiss: pandas.DataFrame, snpmiss: pandas.DataFrame, outputDir):
     """
     indmiss: table
     snpmiss: table
@@ -24,7 +25,7 @@ def hist_miss(indmiss, snpmiss, outputDir):
     plt.clf()
 
 
-def sexcheck(df, outputDir):
+def sexcheck(df: pandas.DataFrame, outputDir):
     gender = join(outputDir + "Gender_check.pdf")
     women = join(outputDir + "Women_check.pdf")
     men = join(outputDir + "Men_check.pdf")
@@ -53,7 +54,7 @@ def sexcheck(df, outputDir):
     plt.clf()
 
 
-def maf_check(df, outputDir):
+def maf_check(df: pandas.DataFrame, outputDir):
     fig = join(outputDir + "MAF_distribution.pdf")
 
     col = df.columns[4]
@@ -65,7 +66,7 @@ def maf_check(df, outputDir):
     plt.clf()
 
 
-def hwe(hwe_df, zoom, outputDir):
+def hwe(hwe_df: pandas.DataFrame, zoom: pandas.DataFrame, outputDir):
     fig = join(outputDir + "HWE_Histogram.pdf")
 
     col = hwe_df.columns[8]
@@ -81,5 +82,18 @@ def hwe(hwe_df, zoom, outputDir):
 
     plt.hist(zoom[col])
     plt.title("Histogram HWE: strongly deviating SNPs only")
+    plt.savefig(fig)
+    plt.clf()
+
+
+def heterozygosity_rate(df: pandas.DataFrame,outputDir):
+    fig = join(outputDir + "heterozygosity.pdf")
+
+    df["HET_RATE"] = (df['N.NM.'] - df['O.HOM.']) / df['N.NM.']
+
+    plt.hist(df['HET_RATE'])
+    plt.xlabel("Heterozygosity Rate")
+    plt.ylabel("Frequency")
+    plt.title("Heterozygosity Rate")
     plt.savefig(fig)
     plt.clf()

@@ -2,6 +2,7 @@
 
 from os import mkdir
 from os.path import join
+from statistics import mean, stdev
 from snprocess.model import plink, read_snp_data, clean
 from snprocess.model import read_from_output as read
 from snprocess.model import run_command as bash
@@ -134,11 +135,18 @@ def QC_1(verbose, opts):
         plink(" --bfile {}plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir))
 
         # plot the heterogygosity rate
-        # TODO
+        df = read_snp_data(outDir, "R_hetCheck")
+        g.heterozygosity_rate(df, outDir)
         # bash("/usr/bin/RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
 
         # list the individuals more than 3 sd away from the heterozygosity rate mean.
-        # TODO
+        tbl = join(outDir + "fail-het-qc.txt")
+
+        df["HET_RATE"] = (df['N.NM.'] - df['O.HOM.']) / df['N.NM.']
+
+        het_fail = df[(df['HET_RATE'] < mean(df['HET_RATE']) - 3 * stdev(df['HET_RATE'])) or (df['HET_RATE'] > mean(df['HET_RATE']) + 3 * stdev(df['HET_RATE']))]
+        het_fail['HET_DST'] = (het_fail['HET_RATE'] - mean(df['HET_RATE']) / stdev(df['HET_RATE']))
+        het_fail.to_csv(tbl)
         # bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
 
         # need to exclude these individuals from the analysis.
