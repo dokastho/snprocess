@@ -24,8 +24,9 @@ def QC_1(verbose, opts):
     except:
         pass
 
-    markup: dict
-    markup['graphs'] = []
+    markup = {
+        "graphs": []
+    }
 
     inDir = opts['fileroute'] + opts['inDir']
     inFile = inDir + opts['inFile']
@@ -186,7 +187,7 @@ def QC_1(verbose, opts):
     plink(" --bfile {}plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir))
 
     # plot the heterogygosity rate
-    df = read_snp_data(outDir, "R_hetCheck")
+    df = read_snp_data(outDir, "R_hetCheck.het", head = 0)
     g.heterozygosity_rate(df, outDir)
 
     markup['graphs'].append({
@@ -198,11 +199,11 @@ def QC_1(verbose, opts):
     # list the individuals more than 3 sd away from the heterozygosity rate mean.
     tbl = join(outDir + "fail-het-qc.txt")
 
-    df["HET_RATE"] = (df['N.NM.'] - df['O.HOM.']) / df['N.NM.']
+    df["HET_RATE"] = (df['N(NM)'] - df['O(HOM)']) / df['N(NM)']
 
     het_fail: pd.DataFrame
-    het_fail = df[(df['HET_RATE'] < mean(df['HET_RATE']) - 3 * stdev(df['HET_RATE']))
-                  or (df['HET_RATE'] > mean(df['HET_RATE']) + 3 * stdev(df['HET_RATE']))]
+    het_fail = df[df['HET_RATE'] < mean(df['HET_RATE']) - 3 * stdev(df['HET_RATE'])]
+    het_fail.append(df[df['HET_RATE'] > mean(df['HET_RATE']) + 3 * stdev(df['HET_RATE'])])
     het_fail['HET_DST'] = (het_fail['HET_RATE'] -
                            mean(df['HET_RATE']) / stdev(df['HET_RATE']))
     het_fail.to_csv(tbl)
@@ -232,4 +233,5 @@ def QC_1(verbose, opts):
     # TODO
     # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
+    json.dump(markup, open("context.json", "w"), indent = 4)
     clean(outDir)

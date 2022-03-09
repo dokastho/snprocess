@@ -5,6 +5,7 @@ import subprocess
 import pandas as pd
 from pathlib import Path
 from os import remove
+import glob
 
 
 def isfloat(val):
@@ -56,6 +57,6 @@ def read_snp_data(outDir, filename, head=None):
 
 
 def clean(outDir):
-    leftovers = Path.glob(outDir, 'plink.*')
+    leftovers = glob.glob(outDir + "plink.*")
     for item in leftovers:
         remove(item)

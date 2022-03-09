@@ -89,7 +89,7 @@ def hwe(hwe_df: pandas.DataFrame, zoom: pandas.DataFrame, outputDir):
 def heterozygosity_rate(df: pandas.DataFrame,outputDir):
     fig = join(outputDir + "heterozygosity.pdf")
 
-    df["HET_RATE"] = (df['N.NM.'] - df['O.HOM.']) / df['N.NM.']
+    df["HET_RATE"] = (df['N(NM)'] - df['O(HOM)']) / df['N(NM)']
 
     plt.hist(df['HET_RATE'])
     plt.xlabel("Heterozygosity Rate")
