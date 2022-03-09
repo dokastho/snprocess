@@ -3,7 +3,7 @@
 
 from os import mkdir
 from os.path import join
-from snprocess.model import plink, read_snp_data
+from snprocess.model import plink, read_snp_data, clean
 from snprocess.model import read_from_output as read
 from snprocess.model import run_command as bash
 import snprocess.graph as g
@@ -168,4 +168,7 @@ def QC_1(verbose, opts):
 
 
         #if there is anyone with a piHat more than 0.2, remove them!
+
+
+        clean()
 

@@ -3,10 +3,14 @@
 import snprocess
 import subprocess
 import pandas as pd
+from pathlib import Path
+from os import remove
+
 
 def isfloat(val):
     res = val.replace('.', '', 1).isdigit()
     return res
+
 
 def run_command(cmd):
     """Run a bash command and handle errors."""
@@ -17,17 +21,21 @@ def run_command(cmd):
         exit("{}: Process exited with error".format(cmd))
     return output[0]
 
+
 def make_bed(inDir, inFile):
     """Convert SNP file to binary format. Return name of binary file."""
     inFileLink = inDir + inFile
-    run_command("plink --bfile {} --make-bed --out {}".format(inFileLink,inFileLink + "_binary"))
+    run_command(
+        "plink --bfile {} --make-bed --out {}".format(inFileLink, inFileLink + "_binary"))
     return inFile + "_binary"
+
 
 def plink(cmd):
     """Run a plink command using run_command."""
     return run_command("./bin/plink" + cmd)
 
-def read_from_output(output, key, sep = " "):
+
+def read_from_output(output, key, sep=" "):
     """Return a dataframe from command output, rows and cols established using KEY"""
     output = output.split()
     output = [(lambda elt: elt.decode("utf-8"))(elt) for elt in output]
@@ -42,5 +50,12 @@ def read_from_output(output, key, sep = " "):
             output[col] = output[col].astype("float")
     return output
 
+
 def read_snp_data(outDir, filename, head=None):
-    return pd.read_csv(delim_whitespace = True,filepath_or_buffer=outDir + filename, header=head)
+    return pd.read_csv(delim_whitespace=True, filepath_or_buffer=outDir + filename, header=head)
+
+
+def clean(outDir):
+    leftovers = Path.glob(outDir, 'plink.*')
+    for item in leftovers:
+        remove(item)
