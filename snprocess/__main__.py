@@ -1,10 +1,9 @@
 """Run all scripts on all phases"""
 from snprocess.qc.qc_1 import QC_1
 from snprocess.qc.qc_2 import QC_2
-from snprocess.model import make_bed
+from snprocess.qc.model import make_bed
 import click
 import json
-import os
 import glob
 
 

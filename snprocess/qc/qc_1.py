@@ -3,12 +3,11 @@
 from os import mkdir
 from os.path import join
 from statistics import mean, stdev
-from snprocess.model import plink, read_snp_data, clean
-from snprocess.model import read_from_output as read
-from snprocess.model import run_command as bash
+from snprocess.qc.model import plink, read_snp_data, clean
+from snprocess.qc.model import read_from_output as read
+from snprocess.qc.model import run_command as bash
 import snprocess.graph as g
 import pandas as pd
-import json
 
 
 def QC_1(verbose, opts, phase, inDir):
