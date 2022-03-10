@@ -5,6 +5,6 @@
   
   for mbni
   
-- [ x ] QC
-- [ x ] Phase 1, 2 & 3 generalized script
+- [x] QC
+- [x] Phase 1, 2 & 3 generalized script
 ## QC
