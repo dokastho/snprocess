@@ -26,7 +26,7 @@ def main(phase, verbose, settings):
     settings = json.load(open(settings))
 
     op = pathlib.Path(settings['outDir'])
-    md(op)
+    md(op/"report.html")
 
     phases = glob.glob(settings['fileroute'] + 'Phase*')
 

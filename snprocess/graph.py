@@ -8,27 +8,27 @@ def hist_miss(indmiss: pandas.DataFrame, snpmiss: pandas.DataFrame, outputDir):
     indmiss: table
     snpmiss: table
     """
-    ind = join(outputDir + "Hist-individualMissingness.pdf")
-    snp = join(outputDir + "Hist-snpMissingness.pdf")
+    ind = join(outputDir + "Hist-individualMissingness.png")
+    snp = join(outputDir + "Hist-snpMissingness.png")
 
     indCol = indmiss.columns[5]
     snpCol = snpmiss.columns[4]
 
     plt.hist(indmiss[indCol])
     plt.title("Histogram individual missingness")
-    plt.savefig(ind, format="pdf")
+    plt.savefig(ind, format="png")
     plt.clf()
 
     plt.hist(snpmiss[snpCol])
     plt.title("Histogram SNP missingness")
-    plt.savefig(snp, format="pdf")
+    plt.savefig(snp, format="png")
     plt.clf()
 
 
 def sexcheck(df: pandas.DataFrame, outputDir):
-    gender = join(outputDir + "Gender_check.pdf")
-    women = join(outputDir + "Women_check.pdf")
-    men = join(outputDir + "Men_check.pdf")
+    gender = join(outputDir + "Gender_check.png")
+    women = join(outputDir + "Women_check.png")
+    men = join(outputDir + "Men_check.png")
 
     col = df.columns[5]
 
@@ -55,7 +55,7 @@ def sexcheck(df: pandas.DataFrame, outputDir):
 
 
 def maf_check(df: pandas.DataFrame, outputDir):
-    fig = join(outputDir + "MAF_distribution.pdf")
+    fig = join(outputDir + "MAF_distribution.png")
 
     col = df.columns[4]
 
@@ -67,7 +67,7 @@ def maf_check(df: pandas.DataFrame, outputDir):
 
 
 def hwe(hwe_df: pandas.DataFrame, zoom: pandas.DataFrame, outputDir):
-    fig = join(outputDir + "HWE_Histogram.pdf")
+    fig = join(outputDir + "HWE_Histogram.png")
 
     col = hwe_df.columns[8]
 
@@ -76,7 +76,7 @@ def hwe(hwe_df: pandas.DataFrame, zoom: pandas.DataFrame, outputDir):
     plt.savefig(fig)
     plt.clf()
 
-    fig = join(outputDir + "HWE_below_theshold_Histogram.pdf")
+    fig = join(outputDir + "HWE_below_theshold_Histogram.png")
 
     col = zoom.columns[8]
 
@@ -87,7 +87,7 @@ def hwe(hwe_df: pandas.DataFrame, zoom: pandas.DataFrame, outputDir):
 
 
 def heterozygosity_rate(df: pandas.DataFrame,outputDir):
-    fig = join(outputDir + "heterozygosity.pdf")
+    fig = join(outputDir + "heterozygosity.png")
 
     df["HET_RATE"] = (df['N(NM)'] - df['O(HOM)']) / df['N(NM)']
 
@@ -100,4 +100,4 @@ def heterozygosity_rate(df: pandas.DataFrame,outputDir):
 
 
 # def relatedness(rel_df, zoom_df, outputDir):
-#     fig = join(outputDir + "relatedness.pdf")
+#     fig = join(outputDir + "relatedness.png")

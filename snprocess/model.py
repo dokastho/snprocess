@@ -1,3 +1,4 @@
+import json
 import jinja2
 from qc.model import plink
 
@@ -14,4 +15,5 @@ def md(output_path):
         autoescape=jinja2.select_autoescape(['html', 'xml']), )
     
     temp = template_env.get_template("report_template.html")
-    output_path.write_text(temp.render("context.json"))
+    data = json.load(open("context.json"))
+    output_path.write_text(temp.render(data))
