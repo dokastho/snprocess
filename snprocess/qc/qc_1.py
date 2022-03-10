@@ -30,7 +30,7 @@ def QC_1(verbose, opts, phase, inDir):
 
     inFile = inDir + opts['inFile']
     # outDir = opts['fileroute'] + opts['outDir']
-    outDir = opts['outDir']
+    outDir = opts['outDir'] + "Phase" + phase + "/"
 
     ####################################################
     # STEP 1: check missingness and generate plots

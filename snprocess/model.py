@@ -1,6 +1,6 @@
 import json
 import jinja2
-from qc.model import plink
+from snprocess.qc.model import plink
 
 
 def make_bed(inDir, inFile):
