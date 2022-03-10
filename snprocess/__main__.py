@@ -25,9 +25,6 @@ def main(phase, verbose, settings):
         settings = "default.json"
     settings = json.load(open(settings))
 
-    op = pathlib.Path(settings['outDir'])
-    md(op/"report.html")
-
     phases = glob.glob(settings['fileroute'] + 'Phase*')
 
     if phase != 0:
@@ -46,6 +43,8 @@ def main(phase, verbose, settings):
         markup['phases'].append(p)
     
     json.dump(markup, open("context.json", "w"), indent = 4)
+    op = pathlib.Path(settings['outDir'])
+    md(op/"report.html")
 
 if __name__ == "__main__":
     main()

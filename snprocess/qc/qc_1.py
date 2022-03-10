@@ -43,11 +43,11 @@ def QC_1(verbose, opts, phase, inDir):
     data['graphs'] = data['graphs'] + [
         {
             "name": "Histogram individual missingness",
-            "file": outDir + "Hist-individualMissingness.pdf"
+            "file": outDir + "Hist-individualMissingness.png"
         },
         {
             "name": "Histogram SNP missingness",
-            "file": outDir + "Hist-snpMissingness.pdf"
+            "file": outDir + "Hist-snpMissingness.png"
         }
     ]
     # bash("/usr/bin/Rscript --no-save hist_miss.R {}plink.imiss {}plink.lmiss {}".format(outDir,outDir,outDir))
@@ -75,15 +75,15 @@ def QC_1(verbose, opts, phase, inDir):
     data['graphs'] = data['graphs'] + [
         {
             "name": "Gender Sexcheck",
-            "file": outDir + "Gender_check.pdf"
+            "file": outDir + "Gender_check.png"
         },
         {
             "name": "Male Sexcheck",
-            "file": outDir + "Men_check.pdf"
+            "file": outDir + "Men_check.png"
         },
         {
             "name": "Female Sexcheck",
-            "file": outDir + "Women_check.pdf"
+            "file": outDir + "Women_check.png"
         }
     ]
 
@@ -122,7 +122,7 @@ def QC_1(verbose, opts, phase, inDir):
     g.maf_check(frq, outDir)
     data['graphs'].append({
         "name": "MAF Distribution",
-        "file": outDir + "MAF_distribution.pdf"
+        "file": outDir + "MAF_distribution.png"
     })
     # bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
@@ -152,11 +152,11 @@ def QC_1(verbose, opts, phase, inDir):
     data['graphs'] = data['graphs'] + [
         {
             "name": "Histogram HWE",
-            "file": outDir + "HWE_Histogram.pdf"
+            "file": outDir + "HWE_Histogram.png"
         },
         {
             "name": "Histogram HWE: strongly deviating SNPs only",
-            "file": outDir + "HWE_below_theshold_Histogram.pdf"
+            "file": outDir + "HWE_below_theshold_Histogram.png"
         }
     ]
 
@@ -191,7 +191,7 @@ def QC_1(verbose, opts, phase, inDir):
 
     data['graphs'].append({
         "name": "Heterozygosity Rate",
-        "file": outDir + "heterozygosity.pdf"
+        "file": outDir + "heterozygosity.png"
     })
     # bash("/usr/bin/RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
 
