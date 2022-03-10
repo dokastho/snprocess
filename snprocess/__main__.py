@@ -33,7 +33,7 @@ def main(phase, verbose, settings):
     for i, ph in enumerate(phases):
         phase = i + 1
         ph += "/"
-        if phase == 0:
+        if phase == 1:
             inDir = "input/"
         else:
             inDir = "data/input/"

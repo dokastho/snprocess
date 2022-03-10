@@ -5,39 +5,39 @@
             "graphs": [
                 {
                     "name": "Histogram individual missingness",
-                    "file": "testout/Hist-individualMissingness.png"
+                    "file": "testout/Phase1/Hist-individualMissingness.png"
                 },
                 {
                     "name": "Histogram SNP missingness",
-                    "file": "testout/Hist-snpMissingness.png"
+                    "file": "testout/Phase1/Hist-snpMissingness.png"
                 },
                 {
                     "name": "Gender Sexcheck",
-                    "file": "testout/Gender_check.png"
+                    "file": "testout/Phase1/Gender_check.png"
                 },
                 {
                     "name": "Male Sexcheck",
-                    "file": "testout/Men_check.png"
+                    "file": "testout/Phase1/Men_check.png"
                 },
                 {
                     "name": "Female Sexcheck",
-                    "file": "testout/Women_check.png"
+                    "file": "testout/Phase1/Women_check.png"
                 },
                 {
                     "name": "MAF Distribution",
-                    "file": "testout/MAF_distribution.png"
+                    "file": "testout/Phase1/MAF_distribution.png"
                 },
                 {
                     "name": "Histogram HWE",
-                    "file": "testout/HWE_Histogram.png"
+                    "file": "testout/Phase1/HWE_Histogram.png"
                 },
                 {
                     "name": "Histogram HWE: strongly deviating SNPs only",
-                    "file": "testout/HWE_below_theshold_Histogram.png"
+                    "file": "testout/Phase1/HWE_below_theshold_Histogram.png"
                 },
                 {
                     "name": "Heterozygosity Rate",
-                    "file": "testout/heterozygosity.png"
+                    "file": "testout/Phase1/heterozygosity.png"
                 }
             ]
         }

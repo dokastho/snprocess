@@ -2,6 +2,7 @@
 
 from os import mkdir
 from os.path import join
+import pathlib
 from statistics import mean, stdev
 from snprocess.qc.model import plink, read_snp_data, clean
 from snprocess.qc.model import read_from_output as read
@@ -17,11 +18,6 @@ def QC_1(verbose, opts, phase, inDir):
     outDir: input files directory, relative link
     inFile: format for input file
     """
-    # args vary by phase, fix driver file to manage this TODO
-    try:
-        mkdir(join(outDir))
-    except:
-        pass
 
     data = {
         "phase": phase,
@@ -30,7 +26,11 @@ def QC_1(verbose, opts, phase, inDir):
 
     inFile = inDir + opts['inFile']
     # outDir = opts['fileroute'] + opts['outDir']
-    outDir = opts['outDir'] + "Phase" + phase + "/"
+    outDir = opts['outDir'] + "Phase{}/".format(phase)
+
+    o = pathlib.Path(outDir)
+    if not o.exists():
+        o.mkdir()
 
     ####################################################
     # STEP 1: check missingness and generate plots
