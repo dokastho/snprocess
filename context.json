@@ -40,6 +40,47 @@
                     "file": "testout/Phase1/heterozygosity.png"
                 }
             ]
+        },
+        {
+            "phase": 3,
+            "graphs": [
+                {
+                    "name": "Histogram individual missingness",
+                    "file": "testout/Phase3/Hist-individualMissingness.png"
+                },
+                {
+                    "name": "Histogram SNP missingness",
+                    "file": "testout/Phase3/Hist-snpMissingness.png"
+                },
+                {
+                    "name": "Gender Sexcheck",
+                    "file": "testout/Phase3/Gender_check.png"
+                },
+                {
+                    "name": "Male Sexcheck",
+                    "file": "testout/Phase3/Men_check.png"
+                },
+                {
+                    "name": "Female Sexcheck",
+                    "file": "testout/Phase3/Women_check.png"
+                },
+                {
+                    "name": "MAF Distribution",
+                    "file": "testout/Phase3/MAF_distribution.png"
+                },
+                {
+                    "name": "Histogram HWE",
+                    "file": "testout/Phase3/HWE_Histogram.png"
+                },
+                {
+                    "name": "Histogram HWE: strongly deviating SNPs only",
+                    "file": "testout/Phase3/HWE_below_theshold_Histogram.png"
+                },
+                {
+                    "name": "Heterozygosity Rate",
+                    "file": "testout/Phase3/heterozygosity.png"
+                }
+            ]
         }
     ]
 }

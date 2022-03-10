@@ -35,6 +35,10 @@ def main(phase, verbose, settings):
         ph += "/"
         if phase == 1:
             inDir = "input/"
+
+        # TODO: phase2 is missing map file, fix and remove
+        elif phase == 2:
+            continue
         else:
             inDir = "data/input/"
             make_bed(ph + inDir, "Reports")

@@ -88,9 +88,11 @@ def QC_1(verbose, opts, phase, inDir):
     ]
 
     # remove individuals with problematic sex
-    output = bash('grep PROBLEM {}plink.sexcheck'.format(outDir))
-    output = read(output, 'PROBLEM')
-    sd_df = pd.DataFrame({0: output[0], 1: output[1]})
+    output = read_snp_data(outDir, "plink.sexcheck", head = 0)
+    output = output[output['STATUS'] == 'PROBLEM']
+    sd_df = pd.DataFrame()
+    sd_df[0] = output[output.columns[0]]
+    sd_df[1] = output[output.columns[1]]
     sd_df.to_csv(sep="\t", path_or_buf='{}sex_discrepency.txt'.format(
         outDir), index=False)
 

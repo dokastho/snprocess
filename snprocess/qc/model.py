@@ -1,6 +1,6 @@
 """Shared methods for the snprocess package."""
 
-import snprocess
+from contextlib import redirect_stdout
 import subprocess
 import pandas as pd
 from os import remove
@@ -15,15 +15,18 @@ def isfloat(val):
 def run_command(cmd):
     """Run a bash command and handle errors."""
     # might want to use subprocess.run instead
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-    output = process.communicate()
-    if process.returncode != 0:
-        exit("{}: Process exited with error".format(cmd))
-    return output[0]
+    with open("snprocess.log", "a") as f:
+        with redirect_stdout(f):
+            process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+            output = process.communicate()
+            if process.returncode != 0:
+                exit("{}: Process exited with error".format(cmd))
+            return output[0]
 
 
 def plink(cmd):
     """Run a plink command using run_command."""
+    
     return run_command("./bin/plink" + cmd)
 
 
