@@ -14,4 +14,4 @@ def md(output_path):
         autoescape=jinja2.select_autoescape(['html', 'xml']), )
     
     temp = template_env.get_template("report_template.html")
-    output_path.write_text(temp.render("report.html"))
+    output_path.write_text(temp.render("context.json"))

@@ -1,7 +1,8 @@
 """Run all scripts on all phases"""
+import pathlib
 from snprocess.qc.qc_1 import QC_1
 from snprocess.qc.qc_2 import QC_2
-from snprocess.qc.model import make_bed
+from model import make_bed, md
 import click
 import json
 import glob
@@ -23,6 +24,9 @@ def main(phase, verbose, settings):
     if settings is None:
         settings = "default.json"
     settings = json.load(open(settings))
+
+    op = pathlib.Path(settings['outDir'])
+    md(op)
 
     phases = glob.glob(settings['fileroute'] + 'Phase*')
 
