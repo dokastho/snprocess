@@ -8,6 +8,7 @@ import json
 import pathlib
 import glob
 
+
 @click.command()
 @click.argument('settings', type=click.STRING)
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
@@ -15,6 +16,12 @@ def main(verbose, settings):
     """
     Run all scripts on input supplied by json config file specified by settings
     """
+
+    markup = {}
+
+    for item, val in settings.items():
+        markup[item] = val
+
     try:
         settings = json.load(open(settings))
     except:
@@ -31,14 +38,11 @@ def main(verbose, settings):
         exit
     elif flist[0][-3] != "b":
         binary = False
-    
+
     if not binary:
         make_bed(input, inputFile)
 
     markup = QC_1(settings, input)
-
-    for item,val in settings.items():
-        markup[item] = val
 
     json.dump(markup, open("context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])
