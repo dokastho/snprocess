@@ -40,9 +40,11 @@ def main(verbose, settings):
     markup = QC_1(settings, input)
 
     markup["settings"] = {}
+    markup["setting_keys"] = []
 
     for item, val in settings.items():
         markup["settings"][item] = val
+        markup["setting_keys"].append(item)
 
     json.dump(markup, open("context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])

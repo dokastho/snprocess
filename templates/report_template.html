@@ -3,8 +3,11 @@
 
 </head>
 <body>
+    {% for key in setting_keys %}
+    <p>{{key}}: {{settings[key]}}</p>
+    {% endfor %}
     {% for graph in graphs %}
-        <img src="{{graph.file}}">
-        <h2>{{graph.name}}</h2>
+    <img src="{{graph.file}}">
+    <h2>{{graph.name}}</h2>
     {% endfor %}
 </body>
