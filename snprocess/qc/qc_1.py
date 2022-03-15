@@ -4,9 +4,7 @@ from os import mkdir
 from os.path import join
 import pathlib
 from statistics import mean, stdev
-from snprocess.qc.model import plink, read_snp_data, clean
-from snprocess.qc.model import read_from_output as read
-from snprocess.qc.model import run_command as bash
+from snprocess.qc.model import plink, read_snp_data, clean, json_save
 import snprocess.graph as g
 import pandas as pd
 
@@ -26,7 +24,7 @@ def QC_1(opts, inDir):
 
     inFile = inDir + opts['inFile']
     # outDir = opts['fileroute'] + opts['outDir']
-    outDir = opts['outDir'] + "Phase{}/".format(phase)
+    outDir = opts['outDir']
 
     o = pathlib.Path(outDir)
     if not o.exists():
@@ -40,16 +38,18 @@ def QC_1(opts, inDir):
     lmiss = read_snp_data(outDir, "plink.lmiss", head=0)
     g.hist_miss(imiss, lmiss, outDir)
 
-    data['graphs'] = data['graphs'] + [
-        {
-            "name": "Histogram individual missingness",
-            "file": outDir + "Hist-individualMissingness.png"
-        },
-        {
-            "name": "Histogram SNP missingness",
-            "file": outDir + "Hist-snpMissingness.png"
-        }
-    ]
+    data = json_save(
+        "Histogram individual missingness",
+        outDir + "Hist-individualMissingness.png",
+        data
+    )
+
+    data = json_save(
+        "Histogram SNP missingness",
+        outDir + "Hist-snpMissingness.png",
+        data
+    )
+
     # bash("/usr/bin/Rscript --no-save hist_miss.R {}plink.imiss {}plink.lmiss {}".format(outDir,outDir,outDir))
 
     ####################################################
@@ -72,23 +72,27 @@ def QC_1(opts, inDir):
     sc = read_snp_data(outDir, "plink.sexcheck", head=0)
     g.sexcheck(sc, outDir)
     # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
-    data['graphs'] = data['graphs'] + [
-        {
-            "name": "Gender Sexcheck",
-            "file": outDir + "Gender_check.png"
-        },
-        {
-            "name": "Male Sexcheck",
-            "file": outDir + "Men_check.png"
-        },
-        {
-            "name": "Female Sexcheck",
-            "file": outDir + "Women_check.png"
-        }
-    ]
+
+    data = json_save(
+        "Gender Sexcheck",
+        outDir + "Gender_check.png",
+        data
+    )
+
+    data = json_save(
+        "Male Sexcheck",
+        outDir + "Men_check.png",
+        data
+    )
+
+    data = json_save(
+        "Female Sexcheck",
+        outDir + "Women_check.png",
+        data
+    )
 
     # remove individuals with problematic sex
-    output = read_snp_data(outDir, "plink.sexcheck", head = 0)
+    output = read_snp_data(outDir, "plink.sexcheck", head=0)
     output = output[output['STATUS'] == 'PROBLEM']
     sd_df = pd.DataFrame()
     sd_df[0] = output[output.columns[0]]
@@ -122,10 +126,13 @@ def QC_1(opts, inDir):
 
     frq = read_snp_data(outDir, "MAF_check.frq", head=0)
     g.maf_check(frq, outDir)
-    data['graphs'].append({
-        "name": "MAF Distribution",
-        "file": outDir + "MAF_distribution.png"
-    })
+
+    data = json_save(
+        "MAF Distribution",
+        outDir + "MAF_distribution.png",
+        data
+    )
+
     # bash("/usr/bin/Rscript --no-save MAF_check.R {}MAF_check. {}".format(outDir, outDir))
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
@@ -151,16 +158,17 @@ def QC_1(opts, inDir):
     zoom = read_snp_data(outDir, "zoom.hwe", head=0)
     g.hwe(hwe_df, zoom, outDir)
 
-    data['graphs'] = data['graphs'] + [
-        {
-            "name": "Histogram HWE",
-            "file": outDir + "HWE_Histogram.png"
-        },
-        {
-            "name": "Histogram HWE: strongly deviating SNPs only",
-            "file": outDir + "HWE_below_theshold_Histogram.png"
-        }
-    ]
+    data = json_save(
+        "Histogram HWE",
+        outDir + "HWE_Histogram.png",
+        data
+    )
+
+    data = json_save(
+        "Histogram HWE: strongly deviating SNPs only",
+        outDir + "HWE_below_theshold_Histogram.png",
+        data
+    )
 
     # bash("/usr/bin/Rscript --no-save hwe.R plink.hwe {}zoom.hwe {}foo".format(outDir,outDir))
 
@@ -188,13 +196,15 @@ def QC_1(opts, inDir):
     plink(" --bfile {}plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir))
 
     # plot the heterogygosity rate
-    df = read_snp_data(outDir, "R_hetCheck.het", head = 0)
+    df = read_snp_data(outDir, "R_hetCheck.het", head=0)
     g.heterozygosity_rate(df, outDir)
 
-    data['graphs'].append({
-        "name": "Heterozygosity Rate",
-        "file": outDir + "heterozygosity.png"
-    })
+    data = json_save(
+        "Heterozygosity Rate",
+        outDir + "heterozygosity.png",
+        data
+    )
+
     # bash("/usr/bin/RScript --no-save heterogygosity_rate.R {}R_hetCheck {}".format(outDir, outDir))
 
     # list the individuals more than 3 sd away from the heterozygosity rate mean.
@@ -203,8 +213,10 @@ def QC_1(opts, inDir):
     df["HET_RATE"] = (df['N(NM)'] - df['O(HOM)']) / df['N(NM)']
 
     het_fail: pd.DataFrame
-    het_fail = df[df['HET_RATE'] < mean(df['HET_RATE']) - 3 * stdev(df['HET_RATE'])]
-    het_fail.append(df[df['HET_RATE'] > mean(df['HET_RATE']) + 3 * stdev(df['HET_RATE'])])
+    het_fail = df[df['HET_RATE'] < mean(
+        df['HET_RATE']) - 3 * stdev(df['HET_RATE'])]
+    het_fail.append(df[df['HET_RATE'] > mean(
+        df['HET_RATE']) + 3 * stdev(df['HET_RATE'])])
     het_fail['HET_DST'] = (het_fail['HET_RATE'] -
                            mean(df['HET_RATE']) / stdev(df['HET_RATE']))
     het_fail.to_csv(tbl)

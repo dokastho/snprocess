@@ -54,3 +54,13 @@ def clean(outDir):
     leftovers = glob.glob(outDir + "plink.*")
     for item in leftovers:
         remove(item)
+
+
+def json_save(title: str, route: str, data):
+    data['graphs'] = data['graphs'] + [
+        {
+            "name": title,
+            "file": route
+        }
+    ]
+    return data
