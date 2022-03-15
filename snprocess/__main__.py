@@ -31,8 +31,12 @@ def main(verbose, settings):
     binary = True
     if len(flist) == 0:
         exit
-    elif flist[0][-3] != "b":
-        binary = False
+    else:
+        for fl in flist:
+            if fl[-3:] == "bim":
+                binary = True
+                break
+            binary = False
 
     if not binary:
         make_bed(input, settings['inFile'])
