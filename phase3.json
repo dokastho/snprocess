@@ -1,0 +1,11 @@
+{
+    "fileroute": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/",
+    "inFile": "Reports",
+    "inDir": "Phase3/data/input/",
+    "outDir": "testout/",
+    "geno": 0.01,
+    "mind": 0.05,
+    "maf": 0.005,
+    "indep_pairwise": [50, 5, 0.5],
+    "relatedness": 0.2
+}
