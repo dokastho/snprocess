@@ -9,32 +9,36 @@ import pathlib
 import glob
 
 @click.command()
-@click.argument('settings', type=click.File)
+@click.argument('settings', type=click.STRING)
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
-def main(folder, verbose, settings):
+def main(verbose, settings):
     """
     Run all scripts on input supplied by json config file specified by settings
     """
-    if settings is None:
-        settings = "default.json"
-    settings = json.load(open(settings))
+    try:
+        settings = json.load(open(settings))
+    except:
+        exit("Settings JSON does not exist. Exiting.")
 
-    input = settings['fileroute'] + folder
+    input = settings['fileroute'] + settings['inDir']
 
     inputFile = input + settings['inFile']
 
-    flist = glob.glob(inputFile)
+    flist = glob.glob(inputFile + "*")
 
     binary = True
     if len(flist) == 0:
         exit
-    elif ".b" not in flist[0][-4]:
+    elif flist[0][-3] != "b":
         binary = False
     
     if not binary:
         make_bed(input, inputFile)
 
-    markup = QC_1(verbose, settings, input)
+    markup = QC_1(settings, input)
+
+    for item,val in settings.items():
+        markup[item] = val
 
     json.dump(markup, open("context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])

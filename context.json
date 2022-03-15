@@ -1,45 +1,54 @@
 {
-    "phases": [
+    "dir": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/Phase1/input/",
+    "graphs": [
         {
-            "phase": 1,
-            "graphs": [
-                {
-                    "name": "Histogram individual missingness",
-                    "file": "testout/Phase1/Hist-individualMissingness.png"
-                },
-                {
-                    "name": "Histogram SNP missingness",
-                    "file": "testout/Phase1/Hist-snpMissingness.png"
-                },
-                {
-                    "name": "Gender Sexcheck",
-                    "file": "testout/Phase1/Gender_check.png"
-                },
-                {
-                    "name": "Male Sexcheck",
-                    "file": "testout/Phase1/Men_check.png"
-                },
-                {
-                    "name": "Female Sexcheck",
-                    "file": "testout/Phase1/Women_check.png"
-                },
-                {
-                    "name": "MAF Distribution",
-                    "file": "testout/Phase1/MAF_distribution.png"
-                },
-                {
-                    "name": "Histogram HWE",
-                    "file": "testout/Phase1/HWE_Histogram.png"
-                },
-                {
-                    "name": "Histogram HWE: strongly deviating SNPs only",
-                    "file": "testout/Phase1/HWE_below_theshold_Histogram.png"
-                },
-                {
-                    "name": "Heterozygosity Rate",
-                    "file": "testout/Phase1/heterozygosity.png"
-                }
-            ]
+            "name": "Histogram individual missingness",
+            "file": "testout/Hist-individualMissingness.png"
+        },
+        {
+            "name": "Histogram SNP missingness",
+            "file": "testout/Hist-snpMissingness.png"
+        },
+        {
+            "name": "Gender Sexcheck",
+            "file": "testout/Gender_check.png"
+        },
+        {
+            "name": "Male Sexcheck",
+            "file": "testout/Men_check.png"
+        },
+        {
+            "name": "Female Sexcheck",
+            "file": "testout/Women_check.png"
+        },
+        {
+            "name": "MAF Distribution",
+            "file": "testout/MAF_distribution.png"
+        },
+        {
+            "name": "Histogram HWE",
+            "file": "testout/HWE_Histogram.png"
+        },
+        {
+            "name": "Histogram HWE: strongly deviating SNPs only",
+            "file": "testout/HWE_below_theshold_Histogram.png"
+        },
+        {
+            "name": "Heterozygosity Rate",
+            "file": "testout/heterozygosity.png"
         }
-    ]
+    ],
+    "fileroute": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/",
+    "inFile": "merge",
+    "inDir": "Phase1/input/",
+    "outDir": "testout/",
+    "geno": 0.01,
+    "mind": 0.05,
+    "maf": 0.005,
+    "indep_pairwise": [
+        50,
+        5,
+        0.5
+    ],
+    "relatedness": 0.2
 }

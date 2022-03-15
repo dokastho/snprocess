@@ -3,11 +3,8 @@
 
 </head>
 <body>
-    {% for phase in phases %}
-        <h1>Phase: {{phase['phase']}}</h1>
-        {% for graph in phase['graphs'] %}
-            <img src="{{graph.file}}">
-            <h2>{{graph.name}}</h2>
-        {% endfor %}
+    {% for graph in graphs %}
+        <img src="{{graph.file}}">
+        <h2>{{graph.name}}</h2>
     {% endfor %}
 </body>
