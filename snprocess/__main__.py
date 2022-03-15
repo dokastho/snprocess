@@ -41,7 +41,7 @@ def main(verbose, settings):
     if not binary:
         make_bed(input, settings['inFile'])
 
-    markup = QC_1(settings, input)
+    markup = QC_1(settings)
 
     markup["settings"] = {}
 

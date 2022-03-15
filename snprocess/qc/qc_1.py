@@ -9,13 +9,15 @@ import snprocess.graph as g
 import pandas as pd
 
 
-def QC_1(opts, inDir):
+def QC_1(opts):
     """
     Handle data from /PRS/phase3/scripts/QC_1.sh.
     inDir: input files directory, relative link
     outDir: input files directory, relative link
     inFile: format for input file
     """
+
+    inDir = opts['fileroute'] + opts['inDir']
 
     data = {
         "dir": inDir,
@@ -263,5 +265,5 @@ def QC_1(opts, inDir):
     # TODO
     # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
-    clean(outDir)
+    # clean(outDir)
     return data
