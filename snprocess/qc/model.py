@@ -30,7 +30,7 @@ def plink(cmd, data):
     output = run_command("./bin/plink" + cmd)
     filter = [x for x in output if "pass filters and QC." in x]
     if len(filter) != 0:
-        data[cmd] = '\n'.join(filter)
+        data["lost"].append({cmd: '\n'.join(filter)})
     return output, data
 
 

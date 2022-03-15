@@ -19,7 +19,8 @@ def QC_1(opts, inDir):
 
     data = {
         "dir": inDir,
-        "graphs": []
+        "graphs": [],
+        "lost": []
     }
 
     inFile = inDir + opts['inFile']

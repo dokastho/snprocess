@@ -3,11 +3,20 @@
 
 </head>
 <body>
-    {% for key in setting_keys %}
-    <p>{{key}}: {{settings[key]}}</p>
+    {% for key, val in settings.items() %}
+    <p>{{key}}: {{val}}</p>
     {% endfor %}
     {% for graph in graphs %}
     <img src="{{graph.file}}">
     <h2>{{graph.name}}</h2>
+    {% endfor %}
+    <h2>Initial data information</h2>
+    {% for key, val in initial.items() %}
+    <p>{{key}}: {{val}}</p>
+    {% endfor%}
+    {% for loss in lost %}
+    {% for key, val in loss.items() %}
+    <p>On command {{key}}: {{val}}</p>
+    {% endfor %}
     {% endfor %}
 </body>
