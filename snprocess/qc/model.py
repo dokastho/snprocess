@@ -21,13 +21,17 @@ def run_command(cmd):
             output = process.communicate()
             if process.returncode != 0:
                 exit("{}: Process exited with error".format(cmd))
-            return output[0]
+            return str(output).split("\\n")
 
 
-def plink(cmd):
+def plink(cmd, data):
     """Run a plink command using run_command."""
     
-    return run_command("./bin/plink" + cmd)
+    output = run_command("./bin/plink" + cmd)
+    filter = [x for x in output if "pass filters and QC." in x]
+    if len(filter) != 0:
+        data[cmd] = '\n'.join(filter)
+    return output, data
 
 
 def read_from_output(output, key, sep=" "):

@@ -32,7 +32,16 @@ def QC_1(opts, inDir):
 
     ####################################################
     # STEP 1: check missingness and generate plots
-    plink(" --bfile {} --missing --out {}plink".format(inFile, outDir))
+    output, data = plink(
+        " --bfile {} --missing --out {}plink".format(inFile, outDir), data)
+    p0 = [x for x in output if "loaded from .fam" in x][0]
+    snp0 = [x for x in output if "variants loaded from .bim file." in x][0]
+    data["initial"] = {
+        "individuals info": p0,
+        "n individuals": int(p0.split()[0]),
+        "SNP info": snp0,
+        "n SNP's": int(snp0.split()[0])
+    }
 
     imiss = read_snp_data(outDir, "plink.imiss", head=0)
     lmiss = read_snp_data(outDir, "plink.lmiss", head=0)
@@ -57,16 +66,17 @@ def QC_1(opts, inDir):
     # Also, they filter on SNP missingness and indivudal missingness. Srijan first filters on individual missingness and then on SNPs much later
 
     # filter SNPs at 0.01
-    plink(" --bfile {} --geno {} --make-bed --out {}plink".format(inFile,
-          opts['geno'], outDir))
+    output, data = plink(" --bfile {} --geno {} --make-bed --out {}plink".format(inFile,
+                                                                                 opts['geno'], outDir), data)
 
     # filter individuals at 0.05
-    plink(" --bfile {}plink --mind {} --make-bed --out {}plink".format(outDir,
-          opts['mind'], outDir))
+    output, data = plink(" --bfile {}plink --mind {} --make-bed --out {}plink".format(outDir,
+                                                                                      opts['mind'], outDir), data)
 
     ####################################################
     # STEP 3: sexcheck
-    plink(" --bfile {}plink --check-sex --out {}plink".format(outDir, outDir))
+    output, data = plink(
+        " --bfile {}plink --check-sex --out {}plink".format(outDir, outDir), data)
 
     # visualize the sex check
     sc = read_snp_data(outDir, "plink.sexcheck", head=0)
@@ -102,7 +112,8 @@ def QC_1(opts, inDir):
 
     # bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
 
-    plink(" -bfile {}plink --remove {}sex_discrepency.txt --make-bed --out {}plink".format(outDir, outDir, outDir))
+    output, data = plink(
+        " -bfile {}plink --remove {}sex_discrepency.txt --make-bed --out {}plink".format(outDir, outDir, outDir), data)
 
     # impute sex... (not sure why this is necessary). NOT RUNNING IT
     # plink -bfile ${outFile}_5 --impute-sex --make-bed --out ${outFile}_6
@@ -117,10 +128,12 @@ def QC_1(opts, inDir):
     output.to_csv(sep="\t", path_or_buf='{}snp_1_22.txt'.format(
         outDir), index=False)
 
-    plink(" --bfile {}plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir, outDir))
+    output, data = plink(
+        " --bfile {}plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir, outDir), data)
 
     # generate plot of MAF distribution
-    plink(" --bfile {}plink --freq --out {}MAF_check".format(outDir, outDir))
+    output, data = plink(
+        " --bfile {}plink --freq --out {}MAF_check".format(outDir, outDir), data)
 
     # visualize it
 
@@ -137,13 +150,14 @@ def QC_1(opts, inDir):
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
     # maf filter at 0.005
-    plink(" --bfile {}plink --maf {} --make-bed --out {}plink".format(outDir,
-          opts['maf'], outDir))
+    output, data = plink(" --bfile {}plink --maf {} --make-bed --out {}plink".format(outDir,
+                                                                                     opts['maf'], outDir), data)
 
     ####################################################
     # STEP 5: Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
 
-    plink(" --bfile {}plink --hardy --out {}plink".format(outDir, outDir))
+    output, data = plink(
+        " --bfile {}plink --hardy --out {}plink".format(outDir, outDir), data)
 
     # select SNPs with HWE p-value below 0.00001
     # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
@@ -175,7 +189,8 @@ def QC_1(opts, inDir):
     # now delete them. We don'd have cae / controls, so filter all at 1e-10
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     # plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
-    plink(" --bfile {}plink --hwe 1e-10 --hwe-all --make-bed --out {}plink".format(outDir, outDir))
+    output, data = plink(
+        " --bfile {}plink --hwe 1e-10 --hwe-all --make-bed --out {}plink".format(outDir, outDir), data)
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning
@@ -189,11 +204,12 @@ def QC_1(opts, inDir):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    plink(" --bfile {}plink --indep-pairwise {} {} {} --out {}indepSNP".format(outDir,
-          opts['indep_pairwise'][0], opts['indep_pairwise'][1], opts['indep_pairwise'][2], outDir))
+    output, data = plink(" --bfile {}plink --indep-pairwise {} {} {} --out {}indepSNP".format(outDir,
+                                                                                              opts['indep_pairwise'][0], opts['indep_pairwise'][1], opts['indep_pairwise'][2], outDir), data)
 
     # get the pruned data set
-    plink(" --bfile {}plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir))
+    output, data = plink(
+        " --bfile {}plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir), data)
 
     # plot the heterogygosity rate
     df = read_snp_data(outDir, "R_hetCheck.het", head=0)
@@ -233,8 +249,8 @@ def QC_1(opts, inDir):
 
     # This step isn't there in Yu's workflow, because it shouldn't really be necessary.
     # relatedness @0.2
-    plink(" --bfile {}plink --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(
-        outDir, outDir, opts['relatedness'], outDir))
+    output, data = plink(" --bfile {}plink --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(
+        outDir, outDir, opts['relatedness'], outDir), data)
 
     # visualize relations. But there will be none! or should be none!
     # bash("awk '{ if ($8 > 0.9) print $0}' {}pihat_min0.2.genome > {}zoom_pihat.genome".format(outDir, outDir))
