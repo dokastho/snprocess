@@ -17,11 +17,6 @@ def main(verbose, settings):
     Run all scripts on input supplied by json config file specified by settings
     """
 
-    markup = {}
-
-    for item, val in settings.items():
-        markup[item] = val
-
     try:
         settings = json.load(open(settings))
     except:
@@ -43,6 +38,11 @@ def main(verbose, settings):
         make_bed(input, inputFile)
 
     markup = QC_1(settings, input)
+
+    markup["settings"] = {}
+
+    for item, val in settings.items():
+        markup["settings"][item] = val
 
     json.dump(markup, open("context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])
