@@ -9,47 +9,44 @@ import glob
 
 
 @click.command()
-@click.argument('phase', type=click.INT)
+@click.argument('settings', type=click.File)
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
-@click.option('-s', '--settings', type=click.STRING, help='input json for custom settings')
-def main(phase, verbose, settings):
+def main(folder, verbose, settings):
     """
-    Run all scripts on 'Phase' passed in as argument. Input 0 to run on all phases
+    Run all scripts on input supplied by json config file specified by settings
     """
 
-    markup = {
-        "phases": []
-    }
+    markup = {}
 
     if settings is None:
         settings = "default.json"
     settings = json.load(open(settings))
 
-    phases = glob.glob(settings['fileroute'] + 'Phase*')
+    input = glob.glob(settings['fileroute'] + folder)[0]
 
-    if phase != 0:
-        phases = [phases[phase - 1]]
+    inputFile = glob.glob(input + "*.bed")
+    if len(inputFile) == 0:
+        inputFile = glob.glob(input + "*.fam")
 
-    for i, ph in enumerate(phases):
-        phase = i + 1
-        ph += "/"
-        if phase == 1:
-            inDir = "input/"
+        if len(inputFile) == 0:
+            exit("""Input directory missing SNP data.
+            
+                    Valid formats: bim/bed, fam""")
 
-        # TODO: phase2 is missing map file, fix and remove
-        elif phase == 2:
-            continue
-        else:
-            inDir = "data/input/"
-            make_bed(ph + inDir, "Reports")
-        inDir = ph + inDir
+        inputFile = inputFile.lstrip(".bed")
+        make_bed(input, inputFile)
 
-        p = QC_1(verbose, settings, phase, inDir)
-        markup['phases'].append(p)
-    
-    json.dump(markup, open("context.json", "w"), indent = 4)
+    else:
+        inputFile = inputFile[0]
+        inputFile = inputFile.lstrip(".bed")
+
+    p = QC_1(verbose, settings, input)
+    markup['phases'].append(p)
+
+    json.dump(markup, open("context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])
     md(op/"report.html")
+
 
 if __name__ == "__main__":
     main()

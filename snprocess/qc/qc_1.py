@@ -11,7 +11,7 @@ import snprocess.graph as g
 import pandas as pd
 
 
-def QC_1(verbose, opts, phase, inDir):
+def QC_1(opts, inDir):
     """
     Handle data from /PRS/phase3/scripts/QC_1.sh.
     inDir: input files directory, relative link
@@ -20,7 +20,7 @@ def QC_1(verbose, opts, phase, inDir):
     """
 
     data = {
-        "phase": phase,
+        "dir": inDir,
         "graphs": []
     }
 
