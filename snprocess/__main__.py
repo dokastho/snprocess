@@ -5,8 +5,8 @@ from snprocess.qc.qc_2 import QC_2
 from snprocess.model import make_bed, md
 import click
 import json
+import pathlib
 import glob
-
 
 @click.command()
 @click.argument('settings', type=click.File)
@@ -15,33 +15,26 @@ def main(folder, verbose, settings):
     """
     Run all scripts on input supplied by json config file specified by settings
     """
-
-    markup = {}
-
     if settings is None:
         settings = "default.json"
     settings = json.load(open(settings))
 
-    input = glob.glob(settings['fileroute'] + folder)[0]
+    input = settings['fileroute'] + folder
 
-    inputFile = glob.glob(input + "*.bed")
-    if len(inputFile) == 0:
-        inputFile = glob.glob(input + "*.fam")
+    inputFile = input + settings['inFile']
 
-        if len(inputFile) == 0:
-            exit("""Input directory missing SNP data.
-            
-                    Valid formats: bim/bed, fam""")
+    flist = glob.glob(inputFile)
 
-        inputFile = inputFile.lstrip(".bed")
+    binary = True
+    if len(flist) == 0:
+        exit
+    elif ".b" not in flist[0][-4]:
+        binary = False
+    
+    if not binary:
         make_bed(input, inputFile)
 
-    else:
-        inputFile = inputFile[0]
-        inputFile = inputFile.lstrip(".bed")
-
-    p = QC_1(verbose, settings, input)
-    markup['phases'].append(p)
+    markup = QC_1(verbose, settings, input)
 
     json.dump(markup, open("context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])
