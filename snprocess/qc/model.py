@@ -26,8 +26,8 @@ def run_command(cmd):
 
 def plink(cmd, data):
     """Run a plink command using run_command."""
-    
-    output = run_command("./bin/plink" + cmd)
+    cmd = "./bin/plink" + cmd
+    output = run_command(cmd)
     filter = [x for x in output if "pass filters and QC." in x]
     if len(filter) != 0:
         data["lost"].append({cmd: '\n'.join(filter)})
@@ -50,7 +50,7 @@ def read_from_output(output, key, sep=" "):
     return output
 
 
-def read_snp_data(outDir, filename, head=None):
+def read_snp_data(outDir, filename, head=None) -> pd.DataFrame:
     return pd.read_csv(delim_whitespace=True, filepath_or_buffer=outDir + filename, header=head)
 
 

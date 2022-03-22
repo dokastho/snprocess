@@ -1,6 +1,6 @@
 """File for second qc method."""
 
-from snprocess.qc.model import plink
+from snprocess.qc.model import plink, read_snp_data
 import pandas as pd
 from pathlib import Path
 
@@ -11,6 +11,9 @@ def QC_2(opts):
     Impetus on results."""
 
     data = {}
+    inDir = opts['fileroute'] + opts['inDir']
+    # outDir = opts['fileroute'] + opts['outDir']
+    outDir = opts['outDir']
     
     outFile = opts["1kg_outfile"]
     
@@ -20,19 +23,116 @@ def QC_2(opts):
         _, data = plink("--bfile {} --set-missing-var-ids @:#[b37]\$1,\$2 --make-bed".format(g1k,), data)
         # Filter variants
 	    # Remove variants based on missing genotype data
-        _, data = plink("--bfile plink --geno 0.2 --allow-no-sex --make-bed", data)
+        _, data = plink("--bfile 1kg_MDS --geno 0.2 --allow-no-sex --make-bed --out {}1kg".format(outDir), data)
         # Remove individuals based on missing genotype data
-        _, data = plink("--bfile plink --mind 0.2 --allow-no-sex --make-bed", data)
+        _, data = plink("--bfile 1kg --mind 0.2 --allow-no-sex --make-bed --out {}1kg".format(outDir), data)
         # Remove variants again
-        _, data = plink("--bfile plink --geno 0.02 --allow-no-sex --make-bed", data)
+        _, data = plink("--bfile 1kg --geno 0.02 --allow-no-sex --make-bed --out {}1kg".format(outDir), data)
         # Remove geno again
-        _, data = plink("--bfile plink --mind 0.02 --allow-no-sex --make-bed", data)
+        _, data = plink("--bfile 1kg --mind 0.02 --allow-no-sex --make-bed --out {}1kg".format(outDir), data)
         # Remove based on MAF
-        _, data = plink("--bfile plink --maf 0.05 --allow-no-sex --make-bed", data)
+        _, data = plink("--bfile 1kg --maf 0.05 --allow-no-sex --make-bed --out {}1kg".format(outDir), data)
         # Filter on HWE
-        _, data = plink("--bfile plink--hwe 0.001 --allow-no-sex --make-bed", data)
+        _, data = plink("--bfile 1kg --hwe 0.001 --allow-no-sex --make-bed --out {}1kg".format(outDir), data)
 
-    print("Extracting variants from the data and from 1kG.")
+    print("Extracting variants from the data and from 1kg.")
     # extract variants present in our data and use them to extract variants in the 1K data
     
+    # awk '{print $2}' ${qcOutFile}.bim > ${psDir}PopStrat_SNPs.txt
+    output = read_snp_data(outDir, "plink.bim", head=0)
+    output = output[output.columns[1]]
+    output.to_csv(sep="\t", path_or_buf='{}PopStrat_SNPs.txt'.format(outDir), index=False)
+
+    # plink --bfile ${plinkFile}_7 --extract ${psDir}PopStrat_SNPs.txt --make-bed --out ${psDir}1kg
+    output, data = plink("--bfile 1kg --extract {}PopStrat_SNPs.txt --make-bed --out {}1kg".format(outDir, outDir), data)
+
+    # # extract variants presents in 1KG which are in our data
+    # awk '{print $2}' ${psDir}1kg.bim > ${psDir}1kg_MDS_SNPs.txt
+    output = read_snp_data(outDir, "1kg.bim", head=0)
+    output = output[output.columns[1]]
+    output.to_csv(sep="\t", path_or_buf='{}1kg_MDS_SNPs.txt'.format(outDir), index=False)
+
+    # plink --bfile ${qcOutFile} --extract ${psDir}1kg_MDS_SNPs.txt --recode --make-bed --out ${psDir}PopStrat_MDS
+    output, data = plink("--bfile plink --extract {}1kg_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir), data)
+
+    # # the datasets have the same variants. Now make them have the same build
+    # awk '{print $2,$4}' ${psDir}PopStrat_MDS.map > ${psDir}buildReport.txt
+    output = read_snp_data(outDir, "PopStrat_MDS.map", head=0)
+    output = output[output.columns[1], output.columns[3]]
+    output.to_csv(sep="\t", path_or_buf='{}buildReport.txt'.format(outDir), index=False)
+    # plink --bfile ${psDir}1kg --update-map ${psDir}buildReport.txt --make-bed --out ${psDir}1kg_1
+
+    output, data = plink("--bfile {}1kg --update-map {}buildReport.txt --make-bed --out {}1kg".format(outDir, outDir, outDir), data)
+
+    # # Now the code for merging the two data sets. Prior to merging, the steps are:
+    # # 1. Make the genomes similar for all SNPs
+    # # 2. Resolve strand issues
+    # # 3. Remove SNPs which still differ between the two data sets
+
+    # echo "Combining the data sets."
+    # echo "Setting the reference genome"
+    # # 1. Set reference genome
+    # # The command will generate some warnings for impossible A1 allele assigments, but they now have the same reference genome for all SNPs
+    # awk '{print $2, $5}' ${plinkFile}_1.bim > ${psDir}1kg_ref-list.txt
+    output = read_snp_data(outDir, "1kg.bim", head=0)
+    output = output[output.columns[1], output.columns[4]]
+    output.to_csv(sep="\t", path_or_buf='{}1kg_ref-list.txt'.format(outDir), index=False)
+
+    # plink --bfile ${psDir}PopStrat_MDS --reference-allele ${psDir}1kg_ref-list.txt --make-bed --out ${psDir}PopStrat-adj
+    output, data = plink("--bfile {}PopStrat_MDS --reference-allele {}1kg_ref-list.txt --make-bed --out {}PopStrat-adj".format(outDir, outDir, outDir), data)
+
+    # echo "Resolving strand issues"
+    # # 2. Resolve Strand issues
+    # # get the differences in the files
+    # awk '{ print $2, $5, $6 }' ${plinkFile}_1.bim > ${psDir}1kg1_tmp
+    # awk '{ print $2, $5, $6 }' ${psDir}PopStrat-adj.bim > ${psDir}PopStrat-adj_tmp
+    # sort ${psDir}1kg1_tmp ${psDir}PopStrat-adj_tmp | uniq -u > ${psDir}all_differences.txt # get uniquerows
+
+    # # Flip SNPs for resolving strand issues
+    # awk '{ print $1 }' ${psDir}all_differences.txt | sort -u > ${psDir}flip_list.txt
+    # plink --bfile ${psDir}PopStrat-adj --flip ${psDir}flip_list.txt --reference-allele ${psDir}1kg_ref-list.txt --make-bed --out ${psDir}PopStrat_corrected
+
+    # # check for problematic SNPs after the flip
+    # awk '{ print $2, $5, $6 }' ${psDir}PopStrat_corrected.bim > ${psDir}PopStrat_corrected_tmp
+    # sort ${psDir}1kg1_tmp ${psDir}PopStrat_corrected_tmp | uniq -u > ${psDir}uncorresponding_SNPs.txt
+
+    # # There aren't too many problematic SNPs left. Let's remove them
+    # awk '{ print $1 }' ${psDir}uncorresponding_SNPs.txt | sort -u > ${psDir}SNPs_excluded.txt
+    # plink --bfile ${psDir}PopStrat_corrected --exclude ${psDir}SNPs_excluded.txt --make-bed --out ${psDir}PopStrat_MDS2
+    # plink --bfile ${psDir}1kg_1 --exclude ${psDir}SNPs_excluded.txt --make-bed --out ${psDir}1kg_2
+
+    # # now merge them
+    # plink --bfile ${psDir}PopStrat_MDS2 --bmerge ${psDir}1kg_2.bed ${psDir}1kg_2.bim ${psDir}1kg_2.fam --allow-no-sex --make-bed --out ${psDir}MDS_merge
+
+    # # Conduct MDS on pruned SNPs
+    # plink --bfile ${psDir}MDS_merge --extract ${qcOutDir}indepSNP.prune.in --genome --out ${psDir}MDS_merge
+    # plink --bfile ${psDir}MDS_merge --read-genome ${psDir}MDS_merge.genome --cluster --mds-plot 10 --out ${psDir}MDS_merge
+
+    # #### Plot it!
+
+    # # Convert population codes into super-population codes (continents)
+    # awk '{ print $1, $1, $2 }' ${panelFile} > ${psDir}race_1kg.txt
+    # sed -i 's/JPT/ASN/g' ${psDir}race_1kg.txt
+    # sed -i 's/ASW/AFR/g' ${psDir}race_1kg.txt
+    # sed -i 's/CEU/EUR/g' ${psDir}race_1kg.txt
+    # sed -i 's/CHB/ASN/g' ${psDir}race_1kg.txt
+    # sed -i 's/CHD/ASN/g' ${psDir}race_1kg.txt
+    # sed -i 's/YRI/AFR/g' ${psDir}race_1kg.txt
+    # sed -i 's/LWK/AFR/g' ${psDir}race_1kg.txt
+    # sed -i 's/TSI/EUR/g' ${psDir}race_1kg.txt
+    # sed -i 's/MXL/AMR/g' ${psDir}race_1kg.txt
+    # sed -i 's/GBR/EUR/g' ${psDir}race_1kg.txt
+    # sed -i 's/FIN/EUR/g' ${psDir}race_1kg.txt
+    # sed -i 's/CHS/ASN/g' ${psDir}race_1kg.txt
+    # sed -i 's/PUR/AMR/g' ${psDir}race_1kg.txt
+
+    # # create our own race file
+    # awk '{ print $1, $2, "OWN" }' ${psDir}PopStrat_MDS.fam > ${psDir}raceFile.txt
+
+    # # concatenate the race file
+    # cat ${psDir}race_1kg.txt ${psDir}raceFile.txt | sed -e '1i\FID IID race' > ${psDir}raceFile2.txt
+
+    # # generate plots
+    # Rscript MDS_merge.R ${psDir}MDS_merge.mds ${psDir}raceFile2.txt ${psDir}
+
     return data
