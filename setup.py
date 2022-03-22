@@ -19,6 +19,7 @@ setup(
         'pytest-mock',
         'click',
         'matplotlib',
+        'pandas',
     ],
     python_requires='>=3.6',
     entry_points={

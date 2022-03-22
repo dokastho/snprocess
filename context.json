@@ -89,6 +89,8 @@
             5,
             0.5
         ],
-        "relatedness": 0.2
+        "relatedness": 0.2,
+        "1kg_plinkfile": "/home/tjdokas/onr_samples_group/GenotypeInfo2015_2018/Files_for_QC/1kG_MDS",
+        "1kg_outfile": "/treehouse/onr_samples_group/GenotypeInfo2015_2018/Files_for_QC/1kG_MDS_7.bim"
     }
 }
