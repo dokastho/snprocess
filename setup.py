@@ -20,6 +20,7 @@ setup(
         'click',
         'matplotlib',
         'pandas',
+        'jinja2',
     ],
     python_requires='>=3.6',
     entry_points={
