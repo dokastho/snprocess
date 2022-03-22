@@ -122,7 +122,7 @@ def QC_1(opts):
     # plink -bfile ${outFile}_5 --impute-sex --make-bed --out ${outFile}_6
 
     ####################################################
-    # STEP 4: select autosomal SNPs only an filter out SNPs with low minor allele frequency (MAF)
+    # STEP 4: select autosomal SNPs only and filter out SNPs with low minor allele frequency (MAF)
 
     # select autosomal SNPs only, ie from chr 1 to 22
     # bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' plink.bim > {}snp_1_22.txt".format(outDir))
@@ -131,8 +131,7 @@ def QC_1(opts):
     output.to_csv(sep="\t", path_or_buf='{}snp_1_22.txt'.format(
         outDir), index=False)
 
-    output, data = plink(
-        " --bfile {}plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir, outDir), data)
+    output, data = plink(" --bfile {}plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir, outDir), data)
 
     # generate plot of MAF distribution
     output, data = plink(
