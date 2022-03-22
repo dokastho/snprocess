@@ -85,7 +85,15 @@ def QC_2(opts):
     # # 2. Resolve Strand issues
     # # get the differences in the files
     # awk '{ print $2, $5, $6 }' ${plinkFile}_1.bim > ${psDir}1kg1_tmp
+    output = read_snp_data(outDir, "1kg.bim", head=0)
+    output = output[output.columns[1], output.columns[4], output.columns[5]]
+    output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp'.format(outDir), index=False)
     # awk '{ print $2, $5, $6 }' ${psDir}PopStrat-adj.bim > ${psDir}PopStrat-adj_tmp
+    output = read_snp_data(outDir, "PopStrat-adj.bim", head=0)
+    output = output[output.columns[1], output.columns[4], output.columns[5]]
+    output.to_csv(sep="\t", path_or_buf='{}PopStrat-adj_tmp'.format(outDir), index=False)
+
+    # TODO
     # sort ${psDir}1kg1_tmp ${psDir}PopStrat-adj_tmp | uniq -u > ${psDir}all_differences.txt # get uniquerows
 
     # # Flip SNPs for resolving strand issues
