@@ -87,13 +87,17 @@ def QC_2(opts, data):
     output = read_snp_data(outDir, "1kg.bim", head=0)
     output = output[[output.columns[1], output.columns[4], output.columns[5]]]
     output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp'.format(outDir), index=False)
+    output = read_snp_data(outDir, "1kg1_tmp", head=0)
+    cols = [output.columns[i] for i in [1, 4, 5]]
+    output = output[cols]
+    output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp_nocols'.format(outDir), index=False)
     # awk '{ print $2, $5, $6 }' ${psDir}PopStrat-adj.bim > ${psDir}PopStrat-adj_tmp
     output = read_snp_data(outDir, "PopStrat-adj.bim", head=0)
     output = output[[output.columns[1], output.columns[4], output.columns[5]]]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat-adj_tmp'.format(outDir), index=False)
 
     # sort ${psDir}1kg1_tmp ${psDir}PopStrat-adj_tmp | uniq -u > ${psDir}all_differences.txt # get uniquerows
-    output = sort_duplicates(outDir, "PopStrat-adj.bim", "1kg1_tmp")
+    output = sort_duplicates(outDir, "PopStrat-adj_tmp", "1kg1_tmp_nocols")
     output.to_csv(sep="\t", path_or_buf='{}all_differences.txt'.format(outDir), index=False)
 
     # # Flip SNPs for resolving strand issues
@@ -111,7 +115,7 @@ def QC_2(opts, data):
     output = output[cols]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat_corrected_tmp'.format(outDir), index=False)
     # sort ${psDir}1kg1_tmp ${psDir}PopStrat_corrected_tmp | uniq -u > ${psDir}uncorresponding_SNPs.txt
-    output = sort_duplicates(outDir, "1kg1_tmp", "PopStrat_corrected_tmp")
+    output = sort_duplicates(outDir, "1kg1_tmp_nocols", "PopStrat_corrected_tmp")
     output.to_csv(sep="\t", path_or_buf='{}uncorresponding_SNPs.txt'.format(outDir), index=False)
 
     # # There aren't too many problematic SNPs left. Let's remove them
