@@ -68,3 +68,11 @@ def json_save(title: str, route: str, data):
         }
     ]
     return data
+
+
+def sort_unique(outDir: str, file1: str, file2: str) -> pd.DataFrame:
+    file1 = read_snp_data(outDir, "{}file1".format(outDir), head=0)
+    file2 = read_snp_data(outDir, "{}file2".format(outDir), head=0)
+    output = file1.append(file2)
+    output = output.drop_duplicates()
+    return output
