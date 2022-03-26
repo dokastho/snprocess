@@ -42,6 +42,7 @@ def main(verbose, settings):
         make_bed(input, settings['inFile'])
 
     markup = QC_1(settings)
+    markup = QC_2(settings, markup)
 
     markup["settings"] = {}
 

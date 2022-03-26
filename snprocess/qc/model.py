@@ -26,7 +26,7 @@ def run_command(cmd):
 
 def plink(cmd, data):
     """Run a plink command using run_command."""
-    cmd = "./bin/plink" + cmd
+    cmd = "./bin/plink " + cmd
     output = run_command(cmd)
     filter = [x for x in output if "pass filters and QC." in x]
     if len(filter) != 0:
@@ -68,3 +68,11 @@ def json_save(title: str, route: str, data):
         }
     ]
     return data
+
+
+def sort_duplicates(outDir: str, fn1: str, fn2: str) -> pd.DataFrame:
+    file1 = read_snp_data(outDir, fn1)
+    file2 = read_snp_data(outDir, fn2)
+    output = file1.append(file2)
+    output = output[output.duplicated()]
+    return output
