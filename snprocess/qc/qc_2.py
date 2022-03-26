@@ -16,6 +16,7 @@ def QC_2(opts, data):
     
     outFile = Path(opts["1kg_outfile"])
 
+    # TODO: replace the outDir with the 1kg dir
     if not Path.is_file(outFile):
         g1k = opts["1kg_plinkfile"]
         # Name missing SNPs
@@ -52,7 +53,7 @@ def QC_2(opts, data):
     output.to_csv(sep="\t", path_or_buf='{}1kg_MDS_SNPs.txt'.format(outDir), index=False)
 
     # plink --bfile ${qcOutFile} --extract ${psDir}1kg_MDS_SNPs.txt --recode --make-bed --out ${psDir}PopStrat_MDS
-    output, data = plink("--bfile plink --extract {}1kg_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir), data)
+    output, data = plink("--bfile {}plink --extract {}1kg_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir, outDir), data)
 
     # # the datasets have the same variants. Now make them have the same build
     # awk '{print $2,$4}' ${psDir}PopStrat_MDS.map > ${psDir}buildReport.txt
@@ -85,7 +86,7 @@ def QC_2(opts, data):
     # # get the differences in the files
     # awk '{ print $2, $5, $6 }' ${plinkFile}_1.bim > ${psDir}1kg1_tmp
     output = read_snp_data(outDir, "1kg.bim", head=0)
-    output = output[[output.columns[1], output.columns[4], output.columns[5]]]
+    cols = [output.columns[i] for i in [1, 4, 5]]
     output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp'.format(outDir), index=False)
     output = read_snp_data(outDir, "1kg1_tmp", head=0)
     cols = [output.columns[i] for i in [1, 4, 5]]
@@ -93,7 +94,7 @@ def QC_2(opts, data):
     output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp_nocols'.format(outDir), index=False)
     # awk '{ print $2, $5, $6 }' ${psDir}PopStrat-adj.bim > ${psDir}PopStrat-adj_tmp
     output = read_snp_data(outDir, "PopStrat-adj.bim", head=0)
-    output = output[[output.columns[1], output.columns[4], output.columns[5]]]
+    cols = [output.columns[i] for i in [1, 4, 5]]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat-adj_tmp'.format(outDir), index=False)
 
     # sort ${psDir}1kg1_tmp ${psDir}PopStrat-adj_tmp | uniq -u > ${psDir}all_differences.txt # get uniquerows
