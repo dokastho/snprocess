@@ -15,5 +15,5 @@ def md(output_path):
         autoescape=jinja2.select_autoescape(['html', 'xml']), )
     
     temp = template_env.get_template("report_template.html")
-    data = json.load(open("context.json"))
+    data = json.load(open("snprocess/context.json"))
     output_path.write_text(temp.render(data))
