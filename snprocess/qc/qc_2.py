@@ -16,7 +16,7 @@ def QC_2(opts, data):
     
     outFile = Path(opts["1kg_outfile"])
 
-    if not Path.is_file(outFile):
+    if Path.is_file(outFile):
         g1k = opts["1kg_plinkfile"]
         # Name missing SNPs
         _, data = plink("--bfile {} --set-missing-var-ids @:#[b37]\$1,\$2 --make-bed --out {}1kg_MDS".format(g1k, outDir,), data)
@@ -32,13 +32,13 @@ def QC_2(opts, data):
         # Remove based on MAF
         _, data = plink("--bfile {}1kg --maf 0.05 --allow-no-sex --make-bed --out {}1kg".format(outDir, outDir), data)
         # Filter on HWE
-        _, data = plink("--bfile {}1kg --hwe 0.001 --allow-no-sex --make-bed --out {}1kg_MDS".format(outDir, outDir), data)
+        _, data = plink("--bfile {}1kg --hwe 0.001 --allow-no-sex --make-bed --out {}1kg".format(outDir, outDir), data)
 
     print("Extracting variants from the data and from 1kg.")
     # extract variants present in our data and use them to extract variants in the 1K data
     
     # awk '{print $2}' ${qcOutFile}.bim > ${psDir}PopStrat_SNPs.txt
-    output = read_snp_data(outDir, "plink.bim", head=0)
+    output = read_snp_data(outDir, "plink.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat_SNPs.txt'.format(outDir), index=False)
 
@@ -47,7 +47,7 @@ def QC_2(opts, data):
 
     # # extract variants presents in 1KG which are in our data
     # awk '{print $2}' ${psDir}1kg.bim > ${psDir}1kg_MDS_SNPs.txt
-    output = read_snp_data(outDir, "1kg.bim", head=0)
+    output = read_snp_data(outDir, "1kg.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}1kg_MDS_SNPs.txt'.format(outDir), index=False)
 
@@ -56,7 +56,7 @@ def QC_2(opts, data):
 
     # # the datasets have the same variants. Now make them have the same build
     # awk '{print $2,$4}' ${psDir}PopStrat_MDS.map > ${psDir}buildReport.txt
-    output = read_snp_data(outDir, "PopStrat_MDS.map", head=0)
+    output = read_snp_data(outDir, "PopStrat_MDS.map")
     output = output[[output.columns[1], output.columns[3]]]
     output.to_csv(sep="\t", path_or_buf='{}buildReport.txt'.format(outDir), index=False)
     # plink --bfile ${psDir}1kg --update-map ${psDir}buildReport.txt --make-bed --out ${psDir}1kg_1
@@ -73,7 +73,7 @@ def QC_2(opts, data):
     # # 1. Set reference genome
     # # The command will generate some warnings for impossible A1 allele assigments, but they now have the same reference genome for all SNPs
     # awk '{print $2, $5}' ${plinkFile}_1.bim > ${psDir}1kg_ref-list.txt
-    output = read_snp_data(outDir, "1kg.bim", head=0)
+    output = read_snp_data(outDir, "1kg.bim")
     output = output[[output.columns[1], output.columns[4]]]
     output.to_csv(sep="\t", path_or_buf='{}1kg_ref-list.txt'.format(outDir), index=False)
 
@@ -84,20 +84,18 @@ def QC_2(opts, data):
     # # 2. Resolve Strand issues
     # # get the differences in the files
     # awk '{ print $2, $5, $6 }' ${plinkFile}_1.bim > ${psDir}1kg1_tmp
-    output = read_snp_data(outDir, "1kg.bim", head=0)
-    output = output[[output.columns[1], output.columns[4], output.columns[5]]]
-    output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp'.format(outDir), index=False)
-    output = read_snp_data(outDir, "1kg1_tmp", head=0)
+    output = read_snp_data(outDir, "1kg.bim")
     cols = [output.columns[i] for i in [1, 4, 5]]
     output = output[cols]
-    output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp_nocols'.format(outDir), index=False)
+    output.to_csv(sep="\t", path_or_buf='{}1kg1_tmp'.format(outDir), index=False)
     # awk '{ print $2, $5, $6 }' ${psDir}PopStrat-adj.bim > ${psDir}PopStrat-adj_tmp
-    output = read_snp_data(outDir, "PopStrat-adj.bim", head=0)
-    output = output[[output.columns[1], output.columns[4], output.columns[5]]]
+    output = read_snp_data(outDir, "PopStrat-adj.bim")
+    cols = [output.columns[i] for i in [1, 4, 5]]
+    output = output[cols]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat-adj_tmp'.format(outDir), index=False)
 
     # sort ${psDir}1kg1_tmp ${psDir}PopStrat-adj_tmp | uniq -u > ${psDir}all_differences.txt # get uniquerows
-    output = sort_duplicates(outDir, "PopStrat-adj_tmp", "1kg1_tmp_nocols")
+    output = sort_duplicates(outDir, "PopStrat-adj_tmp", "1kg1_tmp")
     output.to_csv(sep="\t", path_or_buf='{}all_differences.txt'.format(outDir), index=False)
 
     # # Flip SNPs for resolving strand issues
@@ -110,12 +108,12 @@ def QC_2(opts, data):
 
     # # check for problematic SNPs after the flip
     # awk '{ print $2, $5, $6 }' ${psDir}PopStrat_corrected.bim > ${psDir}PopStrat_corrected_tmp
-    output = read_snp_data(outDir, "PopStrat_corrected.bim", head=0)
+    output = read_snp_data(outDir, "PopStrat_corrected.bim")
     cols = [output.columns[i] for i in [1, 4, 5]]
     output = output[cols]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat_corrected_tmp'.format(outDir), index=False)
     # sort ${psDir}1kg1_tmp ${psDir}PopStrat_corrected_tmp | uniq -u > ${psDir}uncorresponding_SNPs.txt
-    output = sort_duplicates(outDir, "1kg1_tmp_nocols", "PopStrat_corrected_tmp")
+    output = sort_duplicates(outDir, "1kg1_tmp", "PopStrat_corrected_tmp")
     output.to_csv(sep="\t", path_or_buf='{}uncorresponding_SNPs.txt'.format(outDir), index=False)
 
     # # There aren't too many problematic SNPs left. Let's remove them

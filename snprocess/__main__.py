@@ -53,6 +53,9 @@ def main(verbose, settings):
     op = pathlib.Path(settings['outDir'])
     md(op/"report.html")
 
+def hello(s):
+    print("hello")
+    print(s)
 
 if __name__ == "__main__":
     main()
