@@ -70,9 +70,12 @@ def json_save(title: str, route: str, data):
     return data
 
 
-def sort_duplicates(outDir: str, fn1: str, fn2: str) -> pd.DataFrame:
+def sort_unique(outDir: str, fn1: str, fn2: str) -> pd.DataFrame:
     file1 = read_snp_data(outDir, fn1)
     file2 = read_snp_data(outDir, fn2)
-    output = file1.append(file2)
-    output = output[output.duplicated()]
+    output = pd.concat([file1, file2])
+    dupes = [i for b,i in enumerate(output.duplicated()) if b]
+    for i in dupes:
+        row = output[i]
+        # remove rows that match row
     return output
