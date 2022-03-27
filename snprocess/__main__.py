@@ -14,7 +14,7 @@ import glob
 @click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
 def main(verbose, settings):
     """
-    Run all scripts on input supplied by json config file specified by settings
+    Run all scripts on input supplied by json config file specified by SETTINGS
     """
 
     try:
@@ -49,7 +49,7 @@ def main(verbose, settings):
     for item, val in settings.items():
         markup["settings"][item] = val
 
-    json.dump(markup, open("context.json", "w"), indent=4)
+    json.dump(markup, open("snprocess/context.json", "w"), indent=4)
     op = pathlib.Path(settings['outDir'])
     md(op/"report.html")
 

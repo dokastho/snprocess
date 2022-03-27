@@ -52,7 +52,7 @@ def QC_2(opts, data):
     output.to_csv(sep="\t", path_or_buf='{}1kg_MDS_SNPs.txt'.format(outDir), index=False)
 
     # plink --bfile ${qcOutFile} --extract ${psDir}1kg_MDS_SNPs.txt --recode --make-bed --out ${psDir}PopStrat_MDS
-    output, data = plink("--bfile plink --extract {}1kg_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir), data)
+    output, data = plink("--bfile {}plink --extract {}1kg_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir, outDir), data)
 
     # # the datasets have the same variants. Now make them have the same build
     # awk '{print $2,$4}' ${psDir}PopStrat_MDS.map > ${psDir}buildReport.txt
