@@ -3,7 +3,6 @@ pydocstyle
 pylint
 pytest
 pytest-mock
-snakemake
 click
 matplotlib
 pandas
