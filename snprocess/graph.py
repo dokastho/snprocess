@@ -101,3 +101,25 @@ def heterozygosity_rate(df: pandas.DataFrame,outputDir):
 
 # def relatedness(rel_df, zoom_df, outputDir):
 #     fig = join(outputDir + "relatedness.png")
+
+def mds_merge(df: pandas.DataFrame, race: pandas.DataFrame, outputDir):
+    fig = join(outputDir + "MDS.png")
+
+    datafile = pandas.merge([df, race])
+    for row in datafile:
+        if row[2] == "EUR":
+            plt.plot(
+                row[4],
+                row[5],
+            )
+            plt.colormaps("green")
+        elif row[2] == "ASN":
+            plt.plot(
+                row[4],
+                row[5],
+            )
+            plt.colormaps("red")
+            
+    
+    plt.xlabel("MDS Component 1")
+    plt.ylabel("MDS Component 2")
