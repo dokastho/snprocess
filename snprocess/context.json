@@ -1,0 +1,146 @@
+{
+    "dir": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/Phase1/input/",
+    "graphs": [
+        {
+            "name": "Histogram individual missingness",
+            "file": "testout/Hist-individualMissingness.png"
+        },
+        {
+            "name": "Histogram SNP missingness",
+            "file": "testout/Hist-snpMissingness.png"
+        },
+        {
+            "name": "Gender Sexcheck",
+            "file": "testout/Gender_check.png"
+        },
+        {
+            "name": "Male Sexcheck",
+            "file": "testout/Men_check.png"
+        },
+        {
+            "name": "Female Sexcheck",
+            "file": "testout/Women_check.png"
+        },
+        {
+            "name": "MAF Distribution",
+            "file": "testout/MAF_distribution.png"
+        },
+        {
+            "name": "Histogram HWE",
+            "file": "testout/HWE_Histogram.png"
+        },
+        {
+            "name": "Histogram HWE: strongly deviating SNPs only",
+            "file": "testout/HWE_below_theshold_Histogram.png"
+        },
+        {
+            "name": "Heterozygosity Rate",
+            "file": "testout/heterozygosity.png"
+        }
+    ],
+    "lost": [
+        {
+            "./bin/plink  --bfile /home/tjdokas/shops/onr_samples_group/clubhouse/PRS/Phase1/input/merge --geno 0.01 --make-bed --out testout/plink": "674076 variants and 257 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --mind 0.05 --make-bed --out testout/plink": "674076 variants and 255 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --check-sex --out testout/plink": "674076 variants and 255 people pass filters and QC."
+        },
+        {
+            "./bin/plink  -bfile testout/plink --remove testout/sex_discrepency.txt --make-bed --out testout/plink": "674076 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --extract testout/snp_1_22.txt --make-bed --out testout/plink": "656681 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --maf 0.005 --make-bed --out testout/plink": "616243 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --hwe 1e-10 --hwe-all --make-bed --out testout/plink": "616110 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --indep-pairwise 50 5 0.5 --out testout/indepSNP": "616110 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --extract testout/indepSNP.prune.in --het --out testout/R_hetCheck": "294100 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink  --bfile testout/plink --extract testout/indepSNP.prune.in --genome --min 0.2 --out testout/pihat_min0.2": "294100 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile /home/tjdokas/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/1kG_MDS --set-missing-var-ids @:#[b37]\\$1,\\$2 --make-bed --out testout/1kG_qc": "25488488 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --geno 0.2 --allow-no-sex --make-bed --out testout/1kG_qc": "9007422 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --mind 0.2 --allow-no-sex --make-bed --out testout/1kG_qc": "9007422 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --geno 0.02 --allow-no-sex --make-bed --out testout/1kG_qc": "8240745 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --mind 0.02 --allow-no-sex --make-bed --out testout/1kG_qc": "8240745 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --maf 0.05 --allow-no-sex --make-bed --out testout/1kG_qc": "5808310 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --hwe 0.001 --allow-no-sex --make-bed --out testout/1kG_qc": "4118334 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --extract testout/PopStrat_SNPs.txt --make-bed --out testout/1kG_qc": "401075 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/plink --extract testout/1kG_MDS_SNPs.txt --recode --make-bed --out testout/PopStrat_MDS": "610062 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --update-map testout/buildReport.txt --make-bed --out testout/1kG_qc": "401075 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/PopStrat_MDS --reference-allele testout/1kG_ref-list.txt --make-bed --out testout/PopStrat-adj": "610062 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/PopStrat-adj --flip testout/flip_list.txt --reference-allele testout/1kG_ref-list.txt --make-bed --out testout/PopStrat_corrected": "610062 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/PopStrat_corrected --exclude testout/SNPs_excluded.txt --make-bed --out testout/PopStrat_MDS2": "610017 variants and 249 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/1kG_qc --exclude testout/SNPs_excluded.txt --make-bed --out testout/1kG_qc": "401058 variants and 629 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/PopStrat_MDS2 --bmerge testout/1kG_qc.bed testout/1kG_qc.bim testout/1kG_qc.fam --allow-no-sex --make-bed --out testout/MDS_merge": "610017 variants and 878 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/MDS_merge --extract testout/indepSNP.prune.in --genome --out testout/MDS_merge": "291597 variants and 878 people pass filters and QC."
+        },
+        {
+            "./bin/plink --bfile testout/MDS_merge --read-genome testout/MDS_merge.genome --cluster --mds-plot 10 --out testout/MDS_merge": "610017 variants and 878 people pass filters and QC."
+        }
+    ],
+    "initial": {
+        "individuals info": "257 people (130 males, 127 females) loaded from .fam.",
+        "n individuals": 257,
+        "SNP info": "706628 variants loaded from .bim file.",
+        "n SNP's": 706628
+    },
+    "settings": {
+        "1kG_dir": "/home/tjdokas/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/",
+        "fileroute": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/",
+        "inFile": "merge",
+        "inDir": "Phase1/input/",
+        "outDir": "testout/",
+        "geno": 0.01,
+        "mind": 0.05,
+        "maf": 0.005,
+        "indep_pairwise": [
+            50,
+            5,
+            0.5
+        ],
+        "relatedness": 0.2
+    }
+}

@@ -16,7 +16,7 @@ def QC_2(opts, data):
     outDir = opts['outDir']
     g1kDir = opts['1kG_dir']
 
-    if not Path.is_file(Path(g1kDir + "1kG_MDS.bim")):
+    if not Path.is_file(Path(outDir + "1kG_qc.bim")):
         # Name missing SNPs
         _, data = plink(
             "--bfile {}1kG_MDS --set-missing-var-ids @:#[b37]\$1,\$2 --make-bed --out {}1kG_qc".format(g1kDir, outDir,), data)
@@ -214,6 +214,7 @@ def QC_2(opts, data):
         outDir), index=False, header=False)
 
     # # concatenate the race file
+    # need help with these labels
     # cat ${psDir}race_1kG.txt ${psDir}raceFile.txt | sed -e '1i\FID IID race' > ${psDir}raceFile2.txt
     file1 = read_snp_data(outDir, "race_1kG.txt")
     file2 = read_snp_data(outDir, "raceFile.txt")
