@@ -107,19 +107,40 @@ def mds_merge(df: pandas.DataFrame, race: pandas.DataFrame, outputDir):
 
     datafile = pandas.merge([df, race])
     for row in datafile:
-        if row[2] == "EUR":
+        nat = row[14]
+        if nat == "EUR":
             plt.plot(
                 row[4],
                 row[5],
             )
             plt.colormaps("green")
-        elif row[2] == "ASN":
+        elif nat == "ASN":
             plt.plot(
                 row[4],
                 row[5],
             )
             plt.colormaps("red")
-            
+        elif nat == "AMR":
+            plt.plot(
+                row[4],
+                row[5],
+            )
+            plt.colormaps("yellow")
+        elif nat == "AFR":
+            plt.plot(
+                row[4],
+                row[5],
+            )
+            plt.colormaps("blue")
+        elif nat == "OWN":
+            plt.plot(
+                row[4],
+                row[5],
+            )
+            plt.colormaps("black")
     
     plt.xlabel("MDS Component 1")
     plt.ylabel("MDS Component 2")
+
+    plt.savefig(fig)
+    plt.clf()
