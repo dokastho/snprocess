@@ -1,7 +1,7 @@
 """File for second qc method."""
 
-from curses import panel
-from snprocess.qc.model import plink, read_snp_data, sort_unique
+from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique
+import snprocess.graph as g
 import pandas as pd
 from pathlib import Path
 
@@ -209,7 +209,11 @@ def QC_2(opts, data):
     # # create our own race file
     # awk '{ print $1, $2, "OWN" }' ${psDir}PopStrat_MDS.fam > ${psDir}raceFile.txt
     output = read_snp_data(outDir, "PopStrat_MDS.fam")
-    cols = [output.columns[i] for i in [1, 2, 4]]
+    cols = [output.columns[i] for i in [1, 2]]
+    output = output[cols]
+    own = ["OWN" * len(output)]
+    output[2] = own
+    output[3] = own
     output.to_csv(sep="\t", path_or_buf='{}raceFile.txt'.format(
         outDir), index=False, header=False)
 
@@ -223,6 +227,9 @@ def QC_2(opts, data):
         outDir), index=False, header=False)
 
     # # generate plots
-    # Rscript MDS_merge.R ${psDir}MDS_merge.mds ${psDir}raceFile2.txt ${psDir}
+    run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(g1kDir, outDir, outDir))
+    # merge = read_snp_data(g1kDir, "MDS_merge.mds")
+    # race = read_snp_data(outDir, "raceFile2.txt")
+    # g.mds_merge(merge, race, outDir)
 
     return data
