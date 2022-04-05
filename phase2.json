@@ -3,7 +3,7 @@
     "fileroute": "/shops/onr_samples_group/clubhouse/PRS/",
     "inFile": "Reports",
     "inDir": "Phase2/data/input/",
-    "outDir": "testout/",
+    "outDir": "testout2/",
     "geno": 0.01,
     "mind": 0.05,
     "maf": 0.005,
