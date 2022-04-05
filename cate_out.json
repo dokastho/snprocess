@@ -1,0 +1,13 @@
+{
+    "1kG_dir": "/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/",
+    "fileroute": "/shops/onr_samples_group/clubhouse/PRS/",
+    "inFile": "merge",
+    "inDir": "Phase1/input/",
+    "outDir": "/shops/onr_samples_group/clubhouse/Cate/Cate- Freshman Project/output",
+    "geno": 0.01,
+    "mind": 0.05,
+    "maf": 0.005,
+    "indep_pairwise": [50, 5, 0.5],
+    "relatedness": 0.2
+}
+
