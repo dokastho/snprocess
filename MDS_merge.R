@@ -7,11 +7,10 @@ args <- commandArgs(trailingOnly = TRUE)
 data <- read.table(file = args[1], header = TRUE)
 race <- read.table(file = args[2], header = TRUE)
 datafile <- merge(data, race, by = c("IID", "FID"))
-# head(datafile)
 
 pdf(paste0(args[3], "MDS.pdf"))
 plot.new()
-for (i in 1:nrow(datafile)) {
+for (i in seq_len(datafile)) {
     if (datafile[i, 14] == "EUR") {
         plot(datafile[i, 4], datafile[i, 5],
             type = "p",
