@@ -211,9 +211,9 @@ def QC_2(opts, data):
     output = read_snp_data(outDir, "PopStrat_MDS.fam")
     cols = [output.columns[i] for i in [1, 2]]
     output = output[cols]
-    own = ["OWN" * len(output)]
-    output[2] = own
-    output[3] = own
+    output.columns = [0,1]
+    output[2] = 'OWN'
+    output[3] = 'OWN'
     output.to_csv(sep="\t", path_or_buf='{}raceFile.txt'.format(
         outDir), index=False, header=False)
 
@@ -222,12 +222,14 @@ def QC_2(opts, data):
     file1 = read_snp_data(outDir, "race_1kG.txt")
     file2 = read_snp_data(outDir, "raceFile.txt")
     output = pd.concat([file1, file2])
-    output.columns = ["FID", "IID", "race"]
+    output.columns = ["FID", "IID", 2, "race"]
+    output = output.drop(2, 1)
     output.to_csv(sep="\t", path_or_buf='{}raceFile2.txt'.format(
-        outDir), index=False, header=False)
+        outDir), index=False)
 
     # # generate plots
-    run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(g1kDir, outDir, outDir))
+    run_command("Rscript MDS_merge.R {}PopStrat/MDS_merge.mds {}raceFile2.txt {}".format(
+        g1kDir, outDir, outDir))
     # merge = read_snp_data(g1kDir, "MDS_merge.mds")
     # race = read_snp_data(outDir, "raceFile2.txt")
     # g.mds_merge(merge, race, outDir)
