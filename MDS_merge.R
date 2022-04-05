@@ -3,14 +3,19 @@
 # needs the individual missing file (*.imiss) and
 # the SNP missing file (*.rmiss) and the output directory
 args <- commandArgs(trailingOnly = TRUE)
+args <- c(
+    "/home/tjdokas/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/PopStrat/MDS_merge.mds",
+    "testout/raceFile2.txt",
+    "testout/"
+)
 
 data <- read.table(file = args[1], header = TRUE)
 race <- read.table(file = args[2], header = TRUE)
 datafile <- merge(data, race, by = c("IID", "FID"))
 
-pdf(paste0(args[3], "MDS.pdf"))
-plot.new()
-for (i in seq_len(datafile)) {
+png(paste0(args[3], "MDS.png"))
+
+for (i in 1:nrow(datafile)) {
     if (datafile[i, 14] == "EUR") {
         plot(datafile[i, 4], datafile[i, 5],
             type = "p",
