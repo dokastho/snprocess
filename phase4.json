@@ -1,6 +1,6 @@
 {
-    "1kG_dir": "/home/tjdokas/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/",
-    "fileroute": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/",
+    "1kG_dir": "/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/",
+    "fileroute": "/shops/onr_samples_group/clubhouse/PRS/",
     "inFile": "Reports",
     "inDir": "Phase4/data/input/",
     "outDir": "testout/",
