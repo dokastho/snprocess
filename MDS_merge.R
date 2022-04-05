@@ -3,15 +3,15 @@
 # needs the individual missing file (*.imiss) and
 # the SNP missing file (*.rmiss) and the output directory
 args <- commandArgs(trailingOnly = TRUE)
-args <- c(
-    "testout/MDS_merge.mds",
-    "testout/raceFile2.txt",
-    "testout/"
-)
+# args <- c(
+#     "testout/MDS_merge.mds",
+#     "testout/raceFile2.txt",
+#     "testout/"
+# )
 
 data <- read.table(file = args[1], header = TRUE)
 race <- read.table(file = args[2], header = TRUE)
-datafile <- merge(data, race, by = c("FID"))
+datafile <- merge(data, race, by = c("IID"))
 
 png(paste0(args[3], "MDS.png"))
 
