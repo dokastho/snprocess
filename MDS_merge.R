@@ -4,9 +4,9 @@
 # the SNP missing file (*.rmiss) and the output directory
 args <- commandArgs(trailingOnly = TRUE)
 # args <- c(
-#     "testout/MDS_merge.mds",
-#     "testout/raceFile2.txt",
-#     "testout/"
+#     "testout3/MDS_merge.mds",
+#     "testout3/raceFile2.txt",
+#     "testout3/"
 # )
 
 data <- read.table(file = args[1], header = TRUE)
