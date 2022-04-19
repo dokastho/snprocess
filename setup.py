@@ -4,12 +4,12 @@ Python package configuration for scripts.
 Thomas Dokas <dokastho@umich.edu>
 """
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 setup(
     name='snprocess',
-    version='0.1.0',
-    packages=['snprocess'],
+    version='0.1.1',
+    packages=find_packages(include=['snprocess'], exclude=['testout']),
     include_package_data=True,
     install_requires=[
         'pycodestyle',
@@ -25,7 +25,7 @@ setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'snprocess = snprocess.__main__:main'
+            'snprocess = src.__main__:main'
         ]
     },
 )
