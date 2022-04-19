@@ -1,6 +1,6 @@
 """Imputation Precheck for @umich Imputation Servers."""
 
-from src.qc.model import run_command,plink
+from snprocess.qc.model import run_command,plink
 
 def preimputation(data: dict):
 

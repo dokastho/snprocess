@@ -25,7 +25,7 @@ setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'snprocess = src.__main__:main'
+            'snprocess = snprocess.__main__:main'
         ]
     },
 )
