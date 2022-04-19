@@ -55,7 +55,7 @@ def QC_2(opts, data):
 
     # # extract variants presents in 1kG which are in our data
     # awk '{print $2}' ${psDir}1kG.bim > ${psDir}1kG_MDS_SNPs.txt
-    output = read_snp_data("", g1kDir + "1kG_MDS.bim")
+    output = read_snp_data("", outDir + "1kG_MDS.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}1kG_MDS_SNPs.txt'.format(
         outDir), index=False, header=False)
