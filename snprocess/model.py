@@ -11,7 +11,7 @@ def make_bed(inDir, inFile):
 
 def md(output_path):
     template_env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader("templates"),
+        loader=jinja2.FileSystemLoader("snprocess/templates"),
         autoescape=jinja2.select_autoescape(['html', 'xml']), )
     
     temp = template_env.get_template("report_template.html")
