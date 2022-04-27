@@ -228,10 +228,10 @@ def QC_2(opts, data):
         outDir), index=False)
 
     # # generate plots
-    run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(
-        outDir, outDir, outDir))
-    # merge = read_snp_data(g1kDir, "MDS_merge.mds")
-    # race = read_snp_data(outDir, "raceFile2.txt")
-    # g.mds_merge(merge, race, outDir)
+    # run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(
+    #     outDir, outDir, outDir))
+    merge = read_snp_data(g1kDir, "MDS_merge.mds")
+    race = read_snp_data(outDir, "raceFile2.txt")
+    g.mds_merge(merge, race, outDir)
 
     return data
