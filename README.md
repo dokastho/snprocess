@@ -1,4 +1,4 @@
-# Scripts for Data Handling
+# SNPROCESS
   by Thomas Dokas
   
   <dokastho@umich.edu>
