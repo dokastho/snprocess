@@ -11,12 +11,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='snprocess',
-    version='0.1.3',
+    version='0.1.4',
     author="Thomas Dokas",
     author_email="dokastho@umich.edu",
     description="A SNP processing package",
     url="https://github.com/dokastho/snprocess",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=find_packages(include=['snprocess', 'qc', 'templates'], exclude=['testout']),
     include_package_data=True,
     install_requires=[
@@ -31,7 +32,7 @@ setup(
         'jinja2',
     ],
     classifiers=[
-        "Programming Language :: Python :: >3.6",
+        "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
