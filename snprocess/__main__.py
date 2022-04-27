@@ -49,8 +49,9 @@ def main(verbose, settings):
     for item, val in settings.items():
         markup["settings"][item] = val
 
-    json.dump(markup, open("snprocess/context.json", "w"), indent=4)
-    op = pathlib.Path(settings['outDir'])
+    outdir = settings['outDir']
+    json.dump(markup, open("{}/context.json".format(outdir), "w"), indent=4)
+    op = pathlib.Path(outdir)
     md(op/"report.html")
 
 if __name__ == "__main__":
