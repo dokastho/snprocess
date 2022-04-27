@@ -1,0 +1,2 @@
+recursive-include snprocess/qc *.py
+recursive-include snprocess/templates *.html

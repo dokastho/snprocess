@@ -8,8 +8,8 @@ from setuptools import find_packages, setup
 
 setup(
     name='snprocess',
-    version='0.1.1',
-    packages=find_packages(include=['snprocess'], exclude=['testout']),
+    version='0.1.2',
+    packages=find_packages(include=['snprocess', 'qc', 'templates'], exclude=['testout']),
     include_package_data=True,
     install_requires=[
         'pycodestyle',
@@ -25,7 +25,7 @@ setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'snprocess = src.__main__:main'
+            'snprocess = snprocess.__main__:main'
         ]
     },
 )

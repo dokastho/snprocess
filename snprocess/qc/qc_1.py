@@ -4,8 +4,8 @@ from os import mkdir
 from os.path import join
 import pathlib
 from statistics import mean, stdev
-from src.qc.model import plink, read_snp_data, clean, json_save
-import src.graph as g
+from snprocess.qc.model import plink, read_snp_data, clean, json_save
+import snprocess.graph as g
 import pandas as pd
 
 

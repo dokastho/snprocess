@@ -1,7 +1,7 @@
 """File for second qc method."""
 
-from src.qc.model import plink, read_snp_data, run_command, sort_unique
-import src.graph as g
+from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique
+import snprocess.graph as g
 import pandas as pd
 from pathlib import Path
 

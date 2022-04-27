@@ -1,8 +1,8 @@
 """Run all scripts on all phases"""
 import pathlib
-from src.qc.qc_1 import QC_1
-from src.qc.qc_2 import QC_2
-from src.model import make_bed, md
+from snprocess.qc.qc_1 import QC_1
+from snprocess.qc.qc_2 import QC_2
+from snprocess.model import make_bed, md
 import click
 import json
 import pathlib
