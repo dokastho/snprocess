@@ -1,73 +1,14 @@
-#!/garage/akil_lab/R-3.5.3/bin/Rscript
-
-# needs the individual missing file (*.imiss) and
-# the SNP missing file (*.rmiss) and the output directory
-args <- commandArgs(trailingOnly = TRUE)
-# args <- c(
-#     "testout3/MDS_merge.mds",
-#     "testout3/raceFile2.txt",
-#     "testout3/"
-# )
-
-data <- read.table(file = args[1], header = TRUE)
-race <- read.table(file = args[2], header = TRUE)
-datafile <- merge(data, race, by = c("IID"))
-
-png(paste0(args[3], "MDS.png"))
-
-for (i in 1:nrow(datafile)) {
-    if (datafile[i, 14] == "EUR") {
-        plot(datafile[i, 4], datafile[i, 5],
-            type = "p",
-            xlim = c(-0.1, 0.2), ylim = c(-0.15, 0.1),
-            xlab = "MDS Component 1", ylab = "MDS Component 2",
-            pch = 1, cex = 0.5, col = "green"
-        )
-    }
-    par(new = T)
-    if (datafile[i, 14] == "ASN") {
-        plot(datafile[i, 4], datafile[i, 5],
-            type = "p",
-            xlim = c(-0.1, 0.2), ylim = c(-0.15, 0.1),
-            xlab = "MDS Component 1", ylab = "MDS Component 2",
-            pch = 1, cex = 0.5, col = "red"
-        )
-    }
-    par(new = T)
-    if (datafile[i, 14] == "AMR") {
-        plot(datafile[i, 4], datafile[i, 5],
-            type = "p",
-            xlim = c(-0.1, 0.2), ylim = c(-0.15, 0.1),
-            xlab = "MDS Component 1", ylab = "MDS Component 2",
-            pch = 1, cex = 0.5, col = 470
-        )
-    }
-    par(new = T)
-    if (datafile[i, 14] == "AFR") {
-        plot(datafile[i, 4], datafile[i, 5],
-            type = "p",
-            xlim = c(-0.1, 0.2), ylim = c(-0.15, 0.1),
-            xlab = "MDS Component 1", ylab = "MDS Component 2",
-            pch = 1, cex = 0.5, col = "blue"
-        )
-    }
-    par(new = T)
-    if (datafile[i, 14] == "OWN") {
-        plot(datafile[i, 4], datafile[i, 5],
-            type = "p",
-            xlim = c(-0.1, 0.2), ylim = c(-0.15, 0.1),
-            xlab = "MDS Component 1", ylab = "MDS Component 2",
-            pch = 3, cex = 0.7, col = "black"
-        )
-    }
-    par(new = T)
-}
-
-abline(v = -0.035, lty = 3)
-abline(h = 0.035, lty = 3)
-legend("topright",
-    pch = c(1, 1, 1, 1, 3),
-    c("EUR", "ASN", "AMR", "AFR", "OWN"),
-    col = c("green", "red", 470, "blue", "black"),
-    bty = "o", cex = 1
-)
+library(data.table)
+library(ggplot2)
+library(ggthemes)
+ 
+mds <- fread("MDS_merge.mds")
+race <- fread("raceFile2.txt")
+ 
+merged <- merge(mds, race[, c("FID", "race")], by.x = "IID", by.y = "FID")
+ 
+ggplot(merged, aes(C1, C2, group = race)) +
+  geom_point(aes(shape = race, color = race)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  theme_tufte()

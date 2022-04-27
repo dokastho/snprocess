@@ -222,7 +222,7 @@ def QC_2(opts, data):
     file1 = read_snp_data(outDir, "race_1kG.txt")
     file2 = read_snp_data(outDir, "raceFile.txt")
     output = pd.concat([file1, file2])
-    output.columns = ["FID", "IID", 2, "race"]
+    output.columns = ["IID", "FID", 2, "race"]
     output = output.drop(2, 1)
     output.to_csv(sep="\t", path_or_buf='{}raceFile2.txt'.format(
         outDir), index=False)
