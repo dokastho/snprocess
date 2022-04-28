@@ -55,7 +55,7 @@ def QC_2(opts, data):
 
     # # extract variants presents in 1kG which are in our data
     # awk '{print $2}' ${psDir}1kG.bim > ${psDir}1kG_MDS_SNPs.txt
-    output = read_snp_data("", outDir + "1kG_MDS.bim")
+    output = read_snp_data("", outDir + "1kG_qc.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}1kG_MDS_SNPs.txt'.format(
         outDir), index=False, header=False)
@@ -92,7 +92,7 @@ def QC_2(opts, data):
     # # 2. Resolve Strand issues
     # # get the differences in the files
     # awk '{ print $2, $5, $6 }' ${plinkFile}_1.bim > ${psDir}1kG1_tmp
-    output = read_snp_data("", g1kDir + "1kG_MDS.bim")
+    output = read_snp_data("", outDir + "1kG_qc.bim")
     cols = [output.columns[i] for i in [1, 4, 5]]
     output = output[cols]
     output.to_csv(sep="\t", path_or_buf='{}1kG1_tmp'.format(
@@ -230,7 +230,7 @@ def QC_2(opts, data):
     # # generate plots
     # run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(
     #     outDir, outDir, outDir))
-    merge = read_snp_data(g1kDir, "MDS_merge.mds")
+    merge = read_snp_data(outDir, "MDS_merge.mds")
     race = read_snp_data(outDir, "raceFile2.txt")
     g.mds_merge(merge, race, outDir)
 
