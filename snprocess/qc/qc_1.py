@@ -29,9 +29,6 @@ def QC_1(opts):
     # outDir = opts['fileroute'] + opts['outDir']
     outDir = opts['outDir']
 
-    o = pathlib.Path(outDir)
-    if not o.exists():
-        o.mkdir()
 
     ####################################################
     # STEP 1: check missingness and generate plots
@@ -264,5 +261,5 @@ def QC_1(opts):
     # TODO
     # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
-    # clean(outDir)
+    
     return data

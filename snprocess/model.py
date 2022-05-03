@@ -17,3 +17,11 @@ def md(output_path):
     temp = template_env.get_template("report_template.html")
     data = json.load(open("snprocess/context.json"))
     output_path.write_text(temp.render(data))
+
+
+def printdict(d : dict) -> str:
+    """print a dict in a json-like format"""
+    outstr = ""
+    for item in d.keys():
+        outstr += "\t" + item + ": " + str(d[item]) + "\n"
+    return outstr

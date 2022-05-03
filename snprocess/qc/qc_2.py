@@ -1,6 +1,6 @@
 """File for second qc method."""
 
-from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique
+from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique, clean
 import snprocess.graph as g
 import pandas as pd
 from pathlib import Path
@@ -234,4 +234,5 @@ def QC_2(opts, data):
     # race = read_snp_data(outDir, "raceFile2.txt", head=0)
     # g.mds_merge(merge, race, outDir)
 
+    clean(outDir)
     return data
