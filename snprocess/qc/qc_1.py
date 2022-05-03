@@ -166,7 +166,7 @@ def QC_1(opts):
     output = read_snp_data(outDir, "plink.hwe", head=0)
     # output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
     # TODO question about data table
-    output = output[(output[output.columns[8]] > 1e-10)]
+    output = output[(output[output.columns[8]] > opts['hwe'])]
     output.to_csv(sep="\t", path_or_buf='{}zoom.hwe'.format( #zoom is file of snps to remove
         outDir), index=False)
 
@@ -192,7 +192,7 @@ def QC_1(opts):
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     # plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
     output, data = plink(
-        " --bfile {}plink --hwe 1e-10 --hwe-all --make-bed --out {}plink".format(outDir, outDir), data)
+        " --bfile {}plink --hwe {} --hwe-all --make-bed --out {}plink".format(outDir, opts['hwe'], outDir), data)
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning
