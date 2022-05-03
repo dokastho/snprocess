@@ -11,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='snprocess',
-    version='0.1.4',
+    version='0.1.5',
     author="Thomas Dokas",
     author_email="dokastho@umich.edu",
     description="A SNP processing package",
