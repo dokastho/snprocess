@@ -11,8 +11,7 @@ import glob
 
 @click.command()
 @click.argument('settings', type=click.STRING)
-@click.option('-v', '--verbose', type=click.BOOL, help='Log verbose output')
-def main(verbose, settings):
+def main(settings):
     """
     Run all scripts on input supplied by json config file specified by SETTINGS
     """
