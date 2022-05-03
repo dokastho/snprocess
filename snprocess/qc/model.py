@@ -20,13 +20,9 @@ def run_command(cmd):
             process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
             output = process.communicate()
             if process.returncode != 0:
-                print(
-                    '''
-                    ERROR: snprocess unable to run. Is plink installed?
-                    https://www.cog-genomics.org/plink/1.9/
-                    '''
-                )
-                exit("{}: Process exited with error".format(cmd))
+                WARNING = '\033[93m'
+                FAIL = '\033[91m'
+                exit(WARNING + "ERROR: snprocess unable to run. Is plink installed?\nhttps://www.cog-genomics.org/plink/1.9/" + FAIL + "\n\n{}\n^^^ Process exited with error".format(cmd))
             return str(output).split("\\n")
 
 
