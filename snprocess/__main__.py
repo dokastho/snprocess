@@ -7,6 +7,7 @@ import click
 import json
 import pathlib
 import glob
+import os
 
 
 @click.command()
@@ -21,7 +22,8 @@ def main(settings, example):
     BOLD = '\033[1m'
     ENDC = '\033[0m'
 
-    reqd = dict(json.load(open("snprocess/example.json")))
+    example_path = os.path.dirname(os.path.realpath(__file__))
+    reqd = dict(json.load(open(example_path + "/example.json")))
 
     if example:
         print(printdict(reqd))
