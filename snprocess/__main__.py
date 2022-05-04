@@ -22,6 +22,11 @@ def main(settings, example):
     BOLD = '\033[1m'
     ENDC = '\033[0m'
 
+    # check that plink is installed
+    plink_binary = glob.glob("/usr/bin/*")
+    if 'plink' not in plink_binary:
+        exit(FAIL + "Plink not installed. Download it here:\nhttps://www.cog-genomics.org/plink/1.9/")
+
     example_path = os.path.dirname(os.path.realpath(__file__))
     reqd = dict(json.load(open(example_path + "/example.json")))
 
@@ -40,7 +45,11 @@ def main(settings, example):
         exit(FAIL + "Output dir parameter missing from settings JSON.\nPrint an example settings JSON using 'snprocess -e'")
     o = pathlib.Path(outdir)
     if not o.exists():
-        o.mkdir()
+        os.makedirs(o)
+    # don't clobber existing output if not empty
+    else:
+        if len(glob.glob(outdir + "*")) > 0:
+            exit(FAIL + "Output directory is not empty")
 
     # check that all parameters are satisfied in the input file, without extras
     s = dict(settings)
