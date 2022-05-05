@@ -5,6 +5,8 @@ import snprocess.graph as g
 import pandas as pd
 from pathlib import Path
 
+import os
+
 
 def QC_2(opts, data):
     """Second and final step of QC.
@@ -233,8 +235,9 @@ def QC_2(opts, data):
         outDir), index=False)
 
     # generate plots
-    run_command("Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
-        outDir, outDir, outDir))
+    snprocess_path = os.path.dirname(os.path.realpath(__file__))
+    run_command("{}Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
+        snprocess_path, outDir, outDir, outDir))
     
     data = json_save(
         "Population Stratification",

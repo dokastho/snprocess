@@ -35,11 +35,11 @@
 
 # More About SNProcess
 
-## QC1
+## QC13. Remove individuals with outlying gender SNP's
+
 Steps for QC:
 1. Check missingness and generate plots
 2. Remove individuals with high missingness
-3. Remove individuals with outlying gender SNP's
 4. Select autosomal SNPs only and filter out SNPs with low minor allele frequency (MAF)
 5. Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
 6. Heterozygosity and LD Pruning
@@ -51,3 +51,4 @@ This portion of the pipeline compares the user data with data in the 1,000 genom
 * [ ] move final rscripts to python
 * [ ] use tmp folder for files that arent used in index.html and qcplink.xyz
 * [ ] 1kg check if exists, otherwise download. use settings input flag to do qc on 1kg or not
+* [ ] remove snprocess.log
