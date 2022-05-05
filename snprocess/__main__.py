@@ -15,7 +15,7 @@ import os
 @click.option('--settings', '-s', type=click.STRING, help='Settings JSON for SNProcess parameters')
 @click.option('--example','-e', is_flag=True, help='Print an example settings JSON')
 @click.option('--generate','-g', is_flag=True, help='Generate a settings JSON')
-@click.option('--info','-i', default='', type=click.STRING, help='Display results')
+@click.option('--info','-i', default='', type=click.STRING, help='Display results, argument: output directory from SNProcess')
 def main(settings, example, info, generate):
     """
     Run all scripts on input supplied by json config file specified by SETTINGS
@@ -32,23 +32,28 @@ def main(settings, example, info, generate):
 
     # if snprocess will generate a settings json
     if generate:
+        print(OKGREEN + BOLD + "Generate your own settings JSON..." + ENDC)
         settings = {}
         # run these in a loop until they receive quasi-valid responses
         while True:
             settings['1kG_dir'] = input("1k Genome File Route (starts and ends with '/'): ")
-            if len(settings['1kG_dir']) > 0:
+            d = settings['1kG_dir']
+            if len(d) > 0 and d.endswith('/') and d.startswith('/'):
                 break
         while True:
-            settings['inFile'] = input("File pattern of input files (should be .bed if binary, .map if not): ") # TODO verify
-            if len(settings['inFile']) > 0:
+            settings['inFile'] = input("File pattern of input files (should be .bed if binary, .map if not; note: do not include the extension): ") # TODO verify
+            d = settings['inFile']
+            if len(d) > 0 and not d.endswith('/') and not d.startswith('/') and not d.endswith('.bed') and not d.endswith('.map'):
                 break
         while True:
-            settings['inDir'] = input("Path to your input files, AKA their folder: ")
-            if len(settings['inDir']) > 0:
+            settings['inDir'] = input("Path to your input files, AKA their folder (starts and ends with '/'): ")
+            d = settings['inDir']
+            if len(d) > 0 and d.endswith('/') and d.startswith('/'):
                 break
         while True:
-            settings['outDir'] = input("Path to your output info. (This settings json will be saved there shortly): ")
-            if len(settings['inFile']) > 0:
+            settings['outDir'] = input("Path to your output info. (This settings json will be saved there shortly, starts and ends with '/'): ")
+            d = settings['outDir']
+            if len(d) > 0 and d.endswith('/') and d.startswith('/'):
                 break
         while True:
             settings['geno'] = input("SNP missingness threshhold (plink --geno): ")
@@ -56,25 +61,28 @@ def main(settings, example, info, generate):
                 break
         while True:
             settings['mind'] = input("Individual missingness threshhold (plink --mind): ")
-            if settings['geno'].isnumeric():
+            if settings['mind'].isnumeric():
                 break
         while True:
             settings['maf'] = input("Minor Allele Frequency threshhold (MAF): ")
-            if settings['geno'].isnumeric():
+            if settings['maf'].isnumeric():
                 break
         while True:
             settings['hwe'] = input("Hardy-Weinberg Equillibrium p-value: (HWE): ")
-            if settings['geno'].isnumeric():
+            if settings['hwe'].isnumeric():
                 break
         while True:
             settings['indep_pairwise'] = input("Heterozygosity and LD Pruning threshhold: (indep_pairwise): ")
-            if settings['geno'].isnumeric():
+            if settings['indep_pairwise'].isnumeric():
                 break
         while True:
             settings['relatedness'] = input("Relatedness threshhold: ")
-            if settings['geno'].isnumeric():
+            if settings['relatedness'].isnumeric():
                 break
-        json.dump(settings, open("{}/settings.json".format(settings['outdir']), "w"), indent=4)
+        outDir = settings['outDir']
+        os.makedirs(outDir, exist_ok=True)
+        json.dump(settings, open("{}/settings.json".format(outDir), "w"), indent=4)
+        print(OKGREEN + BOLD + "Done! Your settings JSON can be found in the folder {}".format(outDir))
         return 0
 
     # check that plink is installed

@@ -4,7 +4,7 @@ from os import mkdir
 from os.path import join
 import pathlib
 from statistics import mean, stdev
-from snprocess.qc.model import plink, read_snp_data, clean, json_save
+from snprocess.qc.model import plink, read_snp_data, json_save
 import snprocess.graph as g
 import pandas as pd
 

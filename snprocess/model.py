@@ -42,7 +42,7 @@ def clean(outDir):
         remove(item)
 
 
-def run(outdir, server_class=http.server.HTTPServer, handler_class=http.server.BaseHTTPRequestHandler):
+def run(outdir, server_class=http.server.HTTPServer, handler_class=http.server.SimpleHTTPRequestHandler):
     """Run an http server to display info."""
     OKGREEN = '\033[92m'
     BOLD = '\033[1m'
@@ -55,4 +55,5 @@ def run(outdir, server_class=http.server.HTTPServer, handler_class=http.server.B
     httpd = server_class(server_address, handler_class)
     print(OKGREEN + BOLD + "SNProcess will start the http server. Cancel with CTRL+C\nStarting in 3 seconds..." + ENDC)
     sleep(3)
+    print("http://localhost:8008")
     httpd.serve_forever()
