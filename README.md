@@ -27,7 +27,7 @@
   ```
   and go to **localhost:8008**. This is a way of viewing this generated webpage using your own computer as a host. Pretty cool, right?
 
-  ![](gif/info.gif)
+  ![](gif/tutorial.gif)
 
 ## FAQ
   * What should my input json look like? *Run snprocess -e for an example json printed to your console, or snprocess -g to generate your own to your output directory*
