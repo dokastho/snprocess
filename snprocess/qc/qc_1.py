@@ -17,7 +17,7 @@ def QC_1(opts):
     inFile: format for input file
     """
 
-    inDir = opts['fileroute'] + opts['inDir']
+    inDir = opts['inDir']
 
     data = {
         "dir": inDir,

@@ -3,7 +3,7 @@ import pathlib
 from shutil import copyfile as copy
 from snprocess.qc.qc_1 import QC_1
 from snprocess.qc.qc_2 import QC_2
-from snprocess.model import make_bed, md, printdict, clean
+from snprocess.model import make_bed, md, printdict, clean, run
 import click
 import json
 import pathlib
@@ -12,9 +12,11 @@ import os
 
 
 @click.command()
-@click.argument('settings', type=click.STRING)
+@click.option('--settings', '-s', type=click.STRING, help='Settings JSON for SNProcess parameters')
 @click.option('--example','-e', is_flag=True, help='Print an example settings JSON')
-def main(settings, example):
+@click.option('--generate','-g', is_flag=True, help='Generate a settings JSON')
+@click.option('--info','-i', default='', type=click.STRING, help='Display results')
+def main(settings, example, info, generate):
     """
     Run all scripts on input supplied by json config file specified by SETTINGS
     """
@@ -22,6 +24,58 @@ def main(settings, example):
     OKGREEN = '\033[92m'
     BOLD = '\033[1m'
     ENDC = '\033[0m'
+
+    # if snprocess will show the info
+    if info != '':
+        run(info)
+        return 0
+
+    # if snprocess will generate a settings json
+    if generate:
+        settings = {}
+        # run these in a loop until they receive quasi-valid responses
+        while True:
+            settings['1kG_dir'] = input("1k Genome File Route (starts and ends with '/'): ")
+            if len(settings['1kG_dir']) > 0:
+                break
+        while True:
+            settings['inFile'] = input("File pattern of input files (should be .bed if binary, .map if not): ") # TODO verify
+            if len(settings['inFile']) > 0:
+                break
+        while True:
+            settings['inDir'] = input("Path to your input files, AKA their folder: ")
+            if len(settings['inDir']) > 0:
+                break
+        while True:
+            settings['outDir'] = input("Path to your output info. (This settings json will be saved there shortly): ")
+            if len(settings['inFile']) > 0:
+                break
+        while True:
+            settings['geno'] = input("SNP missingness threshhold (plink --geno): ")
+            if settings['geno'].isnumeric():
+                break
+        while True:
+            settings['mind'] = input("Individual missingness threshhold (plink --mind): ")
+            if settings['geno'].isnumeric():
+                break
+        while True:
+            settings['maf'] = input("Minor Allele Frequency threshhold (MAF): ")
+            if settings['geno'].isnumeric():
+                break
+        while True:
+            settings['hwe'] = input("Hardy-Weinberg Equillibrium p-value: (HWE): ")
+            if settings['geno'].isnumeric():
+                break
+        while True:
+            settings['indep_pairwise'] = input("Heterozygosity and LD Pruning threshhold: (indep_pairwise): ")
+            if settings['geno'].isnumeric():
+                break
+        while True:
+            settings['relatedness'] = input("Relatedness threshhold: ")
+            if settings['geno'].isnumeric():
+                break
+        json.dump(settings, open("{}/settings.json".format(settings['outdir']), "w"), indent=4)
+        return 0
 
     # check that plink is installed
     # plink_binary = glob.glob("/usr/bin/*")
@@ -68,16 +122,16 @@ def main(settings, example):
             misslist = ", ".join(reqd)
             exit(FAIL + "Parameters missing from settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format(misslist) + ENDC)
 
-    input = settings['fileroute'] + settings['inDir']
+    indir = settings['inDir']
 
-    inputFile = input + settings['inFile']
+    inputFile = indir + settings['inFile']
 
     flist = glob.glob(inputFile + "*")
 
     # convert to binary if input file not binary already
     binary = True
     if len(flist) == 0:
-        exit(FAIL + "Input files {}* not found in {}".format(settings['inFile'], input) + ENDC)
+        exit(FAIL + "Input files {}* not found in {}".format(settings['inFile'], indir) + ENDC)
     else:
         for fl in flist:
             if fl[-3:] == "bim":
@@ -86,7 +140,7 @@ def main(settings, example):
             binary = False
 
     if not binary:
-        make_bed(input, settings['inFile'])
+        make_bed(indir, settings['inFile'])
 
     # start QC
     print(OKGREEN + BOLD + "Starting QC..." + ENDC)

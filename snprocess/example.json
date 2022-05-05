@@ -1,8 +1,7 @@
 {
     "1kG_dir": "/path/to/1k genome file/",
-    "fileroute": "/path/to/root/for/input dir/",
     "inFile": "merge",
-    "inDir": "relative path/to/input dir",
+    "inDir": "/path/to/input/dir/",
     "outDir": "testout/",
     "geno": 0.01,
     "mind": 0.05,
