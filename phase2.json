@@ -1,8 +1,7 @@
 {
     "1kG_dir": "/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/",
-    "fileroute": "/shops/onr_samples_group/clubhouse/PRS/",
     "inFile": "Reports",
-    "inDir": "Phase2/data/input/",
+    "inDir": "/shops/onr_samples_group/clubhouse/PRS/Phase2/data/input/",
     "outDir": "testout2/",
     "geno": 0.01,
     "mind": 0.05,
