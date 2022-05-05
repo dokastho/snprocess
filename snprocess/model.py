@@ -1,6 +1,8 @@
 import json
 import jinja2
 from snprocess.qc.model import plink
+import glob
+from os import remove
 
 
 def make_bed(inDir, inFile):
@@ -28,3 +30,9 @@ def printdict(d : dict) -> str:
     for item in d.keys():
         outstr += "\t" + item + ": " + str(d[item]) + "\n"
     return outstr
+
+def clean(outDir):
+    """Remove unnecesary files produced by QC."""
+    leftovers = glob.glob(outDir + "plink.*")
+    for item in leftovers:
+        remove(item)

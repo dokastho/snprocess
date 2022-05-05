@@ -1,6 +1,6 @@
 """File for second qc method."""
 
-from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique, clean
+from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique
 import snprocess.graph as g
 import pandas as pd
 from pathlib import Path
@@ -50,7 +50,7 @@ def QC_2(opts, data):
     # extract variants present in our data and use them to extract variants in the 1K data
 
     # awk '{print $2}' ${qcOutFile}.bim > ${psDir}PopStrat_SNPs.txt
-    output = read_snp_data(outDir, "plinkb.bim")
+    output = read_snp_data(outDir, "qcplink.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat_SNPs.txt'.format(
         outDir), index=False, header=False)
@@ -68,7 +68,7 @@ def QC_2(opts, data):
 
     # plink --bfile ${qcOutFile} --extract ${psDir}1kG_MDS_SNPs.txt --recode --make-bed --out ${psDir}PopStrat_MDS
     output, data = plink(
-        "--bfile {}plinkb --extract {}1kG_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir, outDir), data)
+        "--bfile {}qcplink --extract {}1kG_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir, outDir), data)
 
     # # the datasets have the same variants. Now make them have the same build
     # awk '{print $2,$4}' ${psDir}PopStrat_MDS.map > ${psDir}buildReport.txt
@@ -240,5 +240,4 @@ def QC_2(opts, data):
     # race = read_snp_data(outDir, "raceFile2.txt", head=0)
     # g.mds_merge(merge, race, outDir)
 
-    clean(outDir)
     return data

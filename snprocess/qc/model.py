@@ -3,8 +3,6 @@
 from contextlib import redirect_stdout
 import subprocess
 import pandas as pd
-from os import remove
-import glob
 
 
 def isfloat(val):
@@ -54,12 +52,6 @@ def read_from_output(output, key, sep=" "):
 
 def read_snp_data(outDir, filename, head=None) -> pd.DataFrame:
     return pd.read_csv(delim_whitespace=True, filepath_or_buffer=outDir + filename, header=head)
-
-
-def clean(outDir):
-    leftovers = glob.glob(outDir + "plink.*")
-    for item in leftovers:
-        remove(item)
 
 
 def json_save(title: str, route: str, data):

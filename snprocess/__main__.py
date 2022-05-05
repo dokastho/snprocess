@@ -3,7 +3,7 @@ import pathlib
 from shutil import copyfile as copy
 from snprocess.qc.qc_1 import QC_1
 from snprocess.qc.qc_2 import QC_2
-from snprocess.model import make_bed, md, printdict
+from snprocess.model import make_bed, md, printdict, clean
 import click
 import json
 import pathlib
@@ -92,6 +92,9 @@ def main(settings, example):
     print(OKGREEN + BOLD + "Starting QC..." + ENDC)
     markup = QC_1(settings)
     markup = QC_2(settings, markup)
+
+    # clean up files in outdir
+    clean(outdir)
 
     markup["settings"] = {}
 

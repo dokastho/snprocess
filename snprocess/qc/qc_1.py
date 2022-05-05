@@ -188,7 +188,7 @@ def QC_1(opts):
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     # plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
     output, data = plink(
-        " --bfile {}plinka --hwe {} --hwe-all --make-bed --out {}plinkb".format(outDir, opts['hwe'], outDir), data)
+        " --bfile {}plinka --hwe {} --hwe-all --make-bed --out {}qcplink".format(outDir, opts['hwe'], outDir), data)
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning
@@ -202,12 +202,12 @@ def QC_1(opts):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    output, data = plink(" --bfile {}plinkb --indep-pairwise {} {} {} --out {}indepSNP".format(outDir,
+    output, data = plink(" --bfile {}qcplink --indep-pairwise {} {} {} --out {}indepSNP".format(outDir,
                                                                                               opts['indep_pairwise'][0], opts['indep_pairwise'][1], opts['indep_pairwise'][2], outDir), data)
 
     # get the pruned data set
     output, data = plink(
-        " --bfile {}plinkb --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir), data)
+        " --bfile {}qcplink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir), data)
 
     # plot the heterogygosity rate
     df = read_snp_data(outDir, "R_hetCheck.het", head=0)
@@ -247,7 +247,7 @@ def QC_1(opts):
 
     # This step isn't there in Yu's workflow, because it shouldn't really be necessary.
     # relatedness @0.2
-    output, data = plink(" --bfile {}plinkb --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(
+    output, data = plink(" --bfile {}qcplink --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(
         outDir, outDir, opts['relatedness'], outDir), data)
 
     # visualize relations. But there will be none! or should be none!
