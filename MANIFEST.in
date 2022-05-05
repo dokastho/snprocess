@@ -1,4 +1,3 @@
 recursive-include snprocess/qc *.py
 recursive-include snprocess/templates *.html
 include snprocess/*
-include bin/plink

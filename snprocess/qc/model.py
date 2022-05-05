@@ -27,7 +27,7 @@ def run_command(cmd):
 
 def plink(cmd, data):
     """Run a plink command using run_command."""
-    cmd = "./bin/plink " + cmd
+    cmd = "plink " + cmd
     output = run_command(cmd)
     filter = [x for x in output if "pass filters and QC." in x]
     if len(filter) != 0:
