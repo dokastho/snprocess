@@ -235,6 +235,12 @@ def QC_2(opts, data):
     # generate plots
     run_command("Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
         outDir, outDir, outDir))
+    
+    data = json_save(
+        "Population Stratification",
+        "MDS_merge.png",
+        data
+    )
     # merge = read_snp_data(outDir, "MDS_merged.mds", head=0)
     # race = read_snp_data(outDir, "raceFile2.txt", head=0)
     # g.mds_merge(merge, race, outDir)

@@ -20,7 +20,8 @@ def run_command(cmd):
             if process.returncode != 0:
                 WARNING = '\033[93m'
                 FAIL = '\033[91m'
-                exit(WARNING + "ERROR: snprocess unable to run. Is plink installed?\nhttps://www.cog-genomics.org/plink/1.9/" + FAIL + "\n\n{}\n^^^ Process exited with error".format(cmd))
+                ENDC = '\033[0m'
+                exit(WARNING + "ERROR: snprocess unable to run. Is plink installed?\nhttps://www.cog-genomics.org/plink/1.9/" + FAIL + "\n\n{}\n^^^ Process exited with error".format(cmd) + ENDC)
             return str(output).split("\\n")
 
 
