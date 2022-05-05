@@ -7,7 +7,7 @@ mds <- fread(args[5])
 race <- fread(args[6])
 fname <- args[7]
  
-merged <- merge(mds, race[, c("FID", "race")], by.x = "IID", by.y = "FID")
+merged <- merge(mds, race[, c("IID", "race")], by = "IID")
  
 ggplot(merged, aes(C1, C2, group = race)) +
   geom_point(aes(shape = race, color = race)) +
