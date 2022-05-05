@@ -48,7 +48,7 @@ Steps for QC:
 This portion of the pipeline compares the user data with data in the 1,000 genome project and produces graphs that show the population stratification based on race & ethnicity
 
 # TODO
-* [ ] move final rscripts to python
+* [ ] move final rscripts to python. shouldn't there be a python-like ggplot?
 * [ ] use tmp folder for files that arent used in index.html and qcplink.xyz
 * [ ] 1kg check if exists, otherwise download. use settings input flag to do qc on 1kg or not
 * [ ] remove snprocess.log
