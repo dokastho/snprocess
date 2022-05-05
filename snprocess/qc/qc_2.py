@@ -1,6 +1,6 @@
 """File for second qc method."""
 
-from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique, clean
+from snprocess.qc.model import plink, read_snp_data, run_command, sort_unique
 import snprocess.graph as g
 import pandas as pd
 from pathlib import Path
@@ -11,58 +11,64 @@ def QC_2(opts, data):
 
     Impetus on results."""
 
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    BOLD = '\033[1m'
+    ENDC = '\033[0m'
+
     inDir = opts['fileroute'] + opts['inDir']
     # outDir = opts['fileroute'] + opts['outDir']
     outDir = opts['outDir']
     g1kDir = opts['1kG_dir']
 
     if not Path.is_file(Path(outDir + "1kG_qc.bim")):
+        print(WARNING + BOLD + "QC needs to be run on 1k Genome file. This will take a while..." + ENDC)
         # Name missing SNPs
         _, data = plink(
-            "--bfile {}1kG_MDS --set-missing-var-ids @:#[b37]\$1,\$2 --make-bed --out {}1kG_qc".format(g1kDir, outDir,), data)
+            "--bfile {}1kG_MDS --set-missing-var-ids @:#[b37]\$1,\$2 --make-bed --out {}1kG_qca".format(g1kDir, outDir,), data)
         # Filter variants
         # Remove variants based on missing genotype data
         _, data = plink(
-            "--bfile {}1kG_qc --geno 0.2 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
+            "--bfile {}1kG_qca --geno 0.2 --allow-no-sex --make-bed --out {}1kG_qcb".format(outDir, outDir), data)
         # Remove individuals based on missing genotype data
         _, data = plink(
-            "--bfile {}1kG_qc --mind 0.2 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
+            "--bfile {}1kG_qcb --mind 0.2 --allow-no-sex --make-bed --out {}1kG_qca".format(outDir, outDir), data)
         # Remove variants again
         _, data = plink(
-            "--bfile {}1kG_qc --geno 0.02 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
+            "--bfile {}1kG_qca --geno 0.02 --allow-no-sex --make-bed --out {}1kG_qcb".format(outDir, outDir), data)
         # Remove geno again
         _, data = plink(
-            "--bfile {}1kG_qc --mind 0.02 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
+            "--bfile {}1kG_qcb --mind 0.02 --allow-no-sex --make-bed --out {}1kG_qca".format(outDir, outDir), data)
         # Remove based on MAF
         _, data = plink(
-            "--bfile {}1kG_qc --maf 0.05 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
+            "--bfile {}1kG_qca --maf 0.05 --allow-no-sex --make-bed --out {}1kG_qcb".format(outDir, outDir), data)
         # Filter on HWE
         _, data = plink(
-            "--bfile {}1kG_qc --hwe 0.001 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
+            "--bfile {}1kG_qcb --hwe 0.001 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
 
-    print("Extracting variants from the data and from 1kG.")
+    print(OKGREEN + BOLD + "Extracting variants from the data and from 1kG." + ENDC)
     # extract variants present in our data and use them to extract variants in the 1K data
 
     # awk '{print $2}' ${qcOutFile}.bim > ${psDir}PopStrat_SNPs.txt
-    output = read_snp_data(outDir, "plink.bim")
+    output = read_snp_data(outDir, "qcplink.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}PopStrat_SNPs.txt'.format(
         outDir), index=False, header=False)
 
     # plink --bfile ${plinkFile}_7 --extract ${psDir}PopStrat_SNPs.txt --make-bed --out ${psDir}1kG
     output, data = plink(
-        "--bfile {}1kG_qc --extract {}PopStrat_SNPs.txt --make-bed --out {}1kG_qc".format(outDir, outDir, outDir), data)
+        "--bfile {}1kG_qc --extract {}PopStrat_SNPs.txt --make-bed --out {}1kG_qcb".format(outDir, outDir, outDir), data)
 
     # # extract variants presents in 1kG which are in our data
     # awk '{print $2}' ${psDir}1kG.bim > ${psDir}1kG_MDS_SNPs.txt
-    output = read_snp_data("", outDir + "1kG_qc.bim")
+    output = read_snp_data("", outDir + "1kG_qcb.bim")
     output = output[output.columns[1]]
     output.to_csv(sep="\t", path_or_buf='{}1kG_MDS_SNPs.txt'.format(
         outDir), index=False, header=False)
 
     # plink --bfile ${qcOutFile} --extract ${psDir}1kG_MDS_SNPs.txt --recode --make-bed --out ${psDir}PopStrat_MDS
     output, data = plink(
-        "--bfile {}plink --extract {}1kG_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir, outDir), data)
+        "--bfile {}qcplink --extract {}1kG_MDS_SNPs.txt --recode --make-bed --out {}PopStrat_MDS".format(outDir, outDir, outDir), data)
 
     # # the datasets have the same variants. Now make them have the same build
     # awk '{print $2,$4}' ${psDir}PopStrat_MDS.map > ${psDir}buildReport.txt
@@ -73,7 +79,7 @@ def QC_2(opts, data):
     # plink --bfile ${psDir}1kG --update-map ${psDir}buildReport.txt --make-bed --out ${psDir}1kG_1
 
     output, data = plink(
-        "--bfile {}1kG_qc --update-map {}buildReport.txt --make-bed --out {}1kG_qc".format(outDir, outDir, outDir), data)
+        "--bfile {}1kG_qcb --update-map {}buildReport.txt --make-bed --out {}1kG_qca".format(outDir, outDir, outDir), data)
 
     # # Now the code for merging the two data sets. Prior to merging, the steps are:
     # # 1. Make the genomes similar for all SNPs
@@ -92,7 +98,7 @@ def QC_2(opts, data):
     # # 2. Resolve Strand issues
     # # get the differences in the files
     # awk '{ print $2, $5, $6 }' ${plinkFile}_1.bim > ${psDir}1kG1_tmp
-    output = read_snp_data("", outDir + "1kG_qc.bim")
+    output = read_snp_data("", outDir + "1kG_qca.bim")
     cols = [output.columns[i] for i in [1, 4, 5]]
     output = output[cols]
     output.to_csv(sep="\t", path_or_buf='{}1kG1_tmp'.format(
@@ -147,11 +153,11 @@ def QC_2(opts, data):
         "--bfile {}PopStrat_corrected --exclude {}SNPs_excluded.txt --make-bed --out {}PopStrat_MDS2".format(outDir, outDir, outDir), data)
     # plink --bfile ${psDir}1kG_1 --exclude ${psDir}SNPs_excluded.txt --make-bed --out ${psDir}1kG_2
     output, data = plink(
-        "--bfile {}1kG_qc --exclude {}SNPs_excluded.txt --make-bed --out {}1kG_qc".format(outDir, outDir, outDir), data)
+        "--bfile {}1kG_qca --exclude {}SNPs_excluded.txt --make-bed --out {}1kG_qcb".format(outDir, outDir, outDir), data)
 
     # # now merge them
     # plink --bfile ${psDir}PopStrat_MDS2 --bmerge ${psDir}1kG_2.bed ${psDir}1kG_2.bim ${psDir}1kG_2.fam --allow-no-sex --make-bed --out ${psDir}MDS_merge
-    output, data = plink("--bfile {}PopStrat_MDS2 --bmerge {}1kG_qc.bed {}1kG_qc.bim {}1kG_qc.fam --allow-no-sex --make-bed --out {}MDS_merge".format(
+    output, data = plink("--bfile {}PopStrat_MDS2 --bmerge {}1kG_qcb.bed {}1kG_qcb.bim {}1kG_qcb.fam --allow-no-sex --make-bed --out {}MDS_merge".format(
         outDir, outDir, outDir, outDir, outDir), data)
 
     # # Conduct MDS on pruned SNPs
@@ -160,7 +166,7 @@ def QC_2(opts, data):
         "--bfile {}MDS_merge --extract {}indepSNP.prune.in --genome --out {}MDS_merge".format(outDir, outDir, outDir), data)
     # plink --bfile ${psDir}MDS_merge --read-genome ${psDir}MDS_merge.genome --cluster --mds-plot 10 --out ${psDir}MDS_merge
     output, data = plink(
-        "--bfile {}MDS_merge --read-genome {}MDS_merge.genome --cluster --mds-plot 10 --out {}MDS_merge".format(outDir, outDir, outDir), data)
+        "--bfile {}MDS_merge --read-genome {}MDS_merge.genome --cluster --mds-plot 10 --out {}MDS_merged".format(outDir, outDir, outDir), data)
 
     # #### Plot it!
 
@@ -228,11 +234,10 @@ def QC_2(opts, data):
         outDir), index=False)
 
     # # generate plots
-    run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(
-        outDir, outDir, outDir))
-    # merge = read_snp_data(outDir, "MDS_merge.mds", head=0)
+    # run_command("Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
+    #     outDir, outDir, outDir))
+    # merge = read_snp_data(outDir, "MDS_merged.mds", head=0)
     # race = read_snp_data(outDir, "raceFile2.txt", head=0)
     # g.mds_merge(merge, race, outDir)
 
-    clean(outDir)
     return data

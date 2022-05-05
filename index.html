@@ -3,6 +3,33 @@
 
 </head>
 <body>
+    <div>
+        <ul>
+            <li><a href="#Settings">Settings</a></li>
+            
+            <li><a href="#Histogram individual missingness">Histogram individual missingness</a></li>
+            
+            <li><a href="#Histogram SNP missingness">Histogram SNP missingness</a></li>
+            
+            <li><a href="#Gender Sexcheck">Gender Sexcheck</a></li>
+            
+            <li><a href="#Male Sexcheck">Male Sexcheck</a></li>
+            
+            <li><a href="#Female Sexcheck">Female Sexcheck</a></li>
+            
+            <li><a href="#MAF Distribution">MAF Distribution</a></li>
+            
+            <li><a href="#Histogram HWE">Histogram HWE</a></li>
+            
+            <li><a href="#Histogram HWE: strongly deviating SNPs only">Histogram HWE: strongly deviating SNPs only</a></li>
+            
+            <li><a href="#Heterozygosity Rate">Heterozygosity Rate</a></li>
+            
+            <li><a href="#Parameters">Parameters</a></li>
+            <li><a href="#removed">Removed SNPs & Individuals</a></li>
+        </ul>
+    </div>
+    <span id="Settings"><h2>Settings</h2></span>
     
     <p>1kG_dir: /shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/</p>
     
@@ -26,33 +53,33 @@
     
     
     <img src="testout/Hist-individualMissingness.png">
-    <h2>Histogram individual missingness</h2>
+    <span id="Histogram individual missingness"><h2>Histogram individual missingness</h2></span>
     
     <img src="testout/Hist-snpMissingness.png">
-    <h2>Histogram SNP missingness</h2>
+    <span id="Histogram SNP missingness"><h2>Histogram SNP missingness</h2></span>
     
     <img src="testout/Gender_check.png">
-    <h2>Gender Sexcheck</h2>
+    <span id="Gender Sexcheck"><h2>Gender Sexcheck</h2></span>
     
     <img src="testout/Men_check.png">
-    <h2>Male Sexcheck</h2>
+    <span id="Male Sexcheck"><h2>Male Sexcheck</h2></span>
     
     <img src="testout/Women_check.png">
-    <h2>Female Sexcheck</h2>
+    <span id="Female Sexcheck"><h2>Female Sexcheck</h2></span>
     
     <img src="testout/MAF_distribution.png">
-    <h2>MAF Distribution</h2>
+    <span id="MAF Distribution"><h2>MAF Distribution</h2></span>
     
     <img src="testout/HWE_Histogram.png">
-    <h2>Histogram HWE</h2>
+    <span id="Histogram HWE"><h2>Histogram HWE</h2></span>
     
     <img src="testout/HWE_below_theshold_Histogram.png">
-    <h2>Histogram HWE: strongly deviating SNPs only</h2>
+    <span id="Histogram HWE: strongly deviating SNPs only"><h2>Histogram HWE: strongly deviating SNPs only</h2></span>
     
     <img src="testout/heterozygosity.png">
-    <h2>Heterozygosity Rate</h2>
+    <span id="Heterozygosity Rate"><h2>Heterozygosity Rate</h2></span>
     
-    <h2>Initial data information</h2>
+    <span id="Parameters"><h2>Parameters</h2></span>
     
     <p>individuals info: 257 people (130 males, 127 females) loaded from .fam.</p>
     
@@ -62,6 +89,7 @@
     
     <p>n SNP&#39;s: 706628</p>
     
+    <span id="removed"><h2>Removed SNPs & Individuals</h2></span>
     
     
     <p>On command ./bin/plink  --bfile /shops/onr_samples_group/clubhouse/PRS/Phase1/input/merge --geno 0.01 --make-bed --out testout/plink: 674076 variants and 257 people pass filters and QC.</p>
