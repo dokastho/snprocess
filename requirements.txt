@@ -7,3 +7,5 @@ click
 matplotlib
 pandas
 jinja2
+glob
+pathlib
