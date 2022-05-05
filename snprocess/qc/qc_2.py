@@ -11,12 +11,18 @@ def QC_2(opts, data):
 
     Impetus on results."""
 
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    BOLD = '\033[1m'
+    ENDC = '\033[0m'
+
     inDir = opts['fileroute'] + opts['inDir']
     # outDir = opts['fileroute'] + opts['outDir']
     outDir = opts['outDir']
     g1kDir = opts['1kG_dir']
 
     if not Path.is_file(Path(outDir + "1kG_qc.bim")):
+        print(WARNING + BOLD + "QC needs to be run on 1k Genome file. This will take a while..." + ENDC)
         # Name missing SNPs
         _, data = plink(
             "--bfile {}1kG_MDS --set-missing-var-ids @:#[b37]\$1,\$2 --make-bed --out {}1kG_qca".format(g1kDir, outDir,), data)
@@ -38,9 +44,9 @@ def QC_2(opts, data):
             "--bfile {}1kG_qca --maf 0.05 --allow-no-sex --make-bed --out {}1kG_qcb".format(outDir, outDir), data)
         # Filter on HWE
         _, data = plink(
-            "--bfile {}1kG_qcb --hwe 0.001 --allow-no-sex --make-bed --out {}1kG_qca".format(outDir, outDir), data)
+            "--bfile {}1kG_qcb --hwe 0.001 --allow-no-sex --make-bed --out {}1kG_qc".format(outDir, outDir), data)
 
-    print("Extracting variants from the data and from 1kG.")
+    print(OKGREEN + BOLD + "Extracting variants from the data and from 1kG." + ENDC)
     # extract variants present in our data and use them to extract variants in the 1K data
 
     # awk '{print $2}' ${qcOutFile}.bim > ${psDir}PopStrat_SNPs.txt
@@ -51,7 +57,7 @@ def QC_2(opts, data):
 
     # plink --bfile ${plinkFile}_7 --extract ${psDir}PopStrat_SNPs.txt --make-bed --out ${psDir}1kG
     output, data = plink(
-        "--bfile {}1kG_qca --extract {}PopStrat_SNPs.txt --make-bed --out {}1kG_qcb".format(outDir, outDir, outDir), data)
+        "--bfile {}1kG_qc --extract {}PopStrat_SNPs.txt --make-bed --out {}1kG_qcb".format(outDir, outDir, outDir), data)
 
     # # extract variants presents in 1kG which are in our data
     # awk '{print $2}' ${psDir}1kG.bim > ${psDir}1kG_MDS_SNPs.txt
@@ -157,10 +163,10 @@ def QC_2(opts, data):
     # # Conduct MDS on pruned SNPs
     # plink --bfile ${psDir}MDS_merge --extract ${qcOutDir}indepSNP.prune.in --genome --out ${psDir}MDS_merge
     output, data = plink(
-        "--bfile {}MDS_merge --extract {}indepSNP.prune.in --genome --out {}MDS_mergea".format(outDir, outDir, outDir), data)
+        "--bfile {}MDS_merge --extract {}indepSNP.prune.in --genome --out {}MDS_merge".format(outDir, outDir, outDir), data)
     # plink --bfile ${psDir}MDS_merge --read-genome ${psDir}MDS_merge.genome --cluster --mds-plot 10 --out ${psDir}MDS_merge
     output, data = plink(
-        "--bfile {}MDS_mergea --read-genome {}MDS_merge.genome --cluster --mds-plot 10 --out {}MDS_merge".format(outDir, outDir, outDir), data)
+        "--bfile {}MDS_merge --read-genome {}MDS_merge.genome --cluster --mds-plot 10 --out {}MDS_merged".format(outDir, outDir, outDir), data)
 
     # #### Plot it!
 
@@ -228,9 +234,9 @@ def QC_2(opts, data):
         outDir), index=False)
 
     # # generate plots
-    run_command("Rscript MDS_merge.R {}MDS_merge.mds {}raceFile2.txt {}".format(
-        outDir, outDir, outDir))
-    # merge = read_snp_data(outDir, "MDS_merge.mds", head=0)
+    # run_command("Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
+    #     outDir, outDir, outDir))
+    # merge = read_snp_data(outDir, "MDS_merged.mds", head=0)
     # race = read_snp_data(outDir, "raceFile2.txt", head=0)
     # g.mds_merge(merge, race, outDir)
 

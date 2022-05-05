@@ -79,7 +79,7 @@ def QC_1(opts):
         " --bfile {}plinkb --check-sex --out {}plinka".format(outDir, outDir), data)
 
     # visualize the sex check
-    sc = read_snp_data(outDir, "plink.sexcheck", head=0)
+    sc = read_snp_data(outDir, "plinka.sexcheck", head=0)
     g.sexcheck(sc, outDir)
     # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
 
@@ -102,7 +102,7 @@ def QC_1(opts):
     )
 
     # remove individuals with problematic sex
-    output = read_snp_data(outDir, "plink.sexcheck", head=0)
+    output = read_snp_data(outDir, "plinka.sexcheck", head=0)
     output = output[output['STATUS'] == 'PROBLEM']
     sd_df = pd.DataFrame()
     sd_df[0] = output[output.columns[0]]
@@ -123,7 +123,7 @@ def QC_1(opts):
 
     # select autosomal SNPs only, ie from chr 1 to 22
     # bash("awk '{ if ($1 >= 1 && $1 <= 22) print $2 }' plink.bim > {}snp_1_22.txt".format(outDir))
-    output = read_snp_data(outDir, "plink.bim")
+    output = read_snp_data(outDir, "plinkb.bim")
     output = output[1][(output[0] >= 1) & (output[0] <= 22)]
     output.to_csv(sep="\t", path_or_buf='{}snp_1_22.txt'.format(
         outDir), index=False)
@@ -160,14 +160,13 @@ def QC_1(opts):
 
     # select SNPs with HWE p-value below 0.00001
     # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
-    output = read_snp_data(outDir, "plink.hwe", head=0)
+    output = read_snp_data(outDir, "plinka.hwe", head=0)
     # output = output[output.columns[0]][(output[output.columns[8]] < .0001)]
-    # TODO question about data table
     output = output[(output[output.columns[8]] > opts['hwe'])]
     output.to_csv(sep="\t", path_or_buf='{}zoom.hwe'.format( #zoom is file of snps to remove
         outDir), index=False)
 
-    hwe_df = read_snp_data(outDir, "plink.hwe", head=0)
+    hwe_df = read_snp_data(outDir, "plinka.hwe", head=0)
     zoom = read_snp_data(outDir, "zoom.hwe", head=0)
     g.hwe(hwe_df, zoom, outDir)
 
@@ -227,6 +226,7 @@ def QC_1(opts):
 
     df["HET_RATE"] = (df['N(NM)'] - df['O(HOM)']) / df['N(NM)']
 
+    # TODO: fix errors here
     het_fail: pd.DataFrame
     het_fail = df[df['HET_RATE'] < mean(
         df['HET_RATE']) - 3 * stdev(df['HET_RATE'])]
@@ -238,7 +238,6 @@ def QC_1(opts):
     # bash("/usr/bin/Rscript --no-save heterozygosity_outliers.R {}R_hetCheck {}".format(outDir, outDir))
 
     # need to exclude these individuals from the analysis.
-    # TODO
     # bash('''sed 's/"// g' {}fail-het-qc.txt | awk '{print $1, $2}' > {}het-fail-ind.txt'''.format(outDir, outDir))
 
     # plink(" --bfile plink --remove {}het-fail-ind.txt --make-bed".format(outDir))
@@ -258,7 +257,6 @@ def QC_1(opts):
     output.to_csv(sep="\t", path_or_buf='{}zoom_pihat.genome'.format(
         outDir), index=False)
 
-    # TODO
     # bash("/usr/bin/Rscript --no-save relatedness.R {}pihat_min0.2.genome {}zoom_pihat.genome {}".format(outDir, outDir, outDir))
 
     

@@ -49,7 +49,8 @@ def main(settings, example):
     # don't clobber existing output if not empty
     else:
         if len(glob.glob(outdir + "*")) > 0:
-            exit(FAIL + "Output directory is not empty")
+            # exit(FAIL + "Output directory is not empty")
+            pass
 
     # check that all parameters are satisfied in the input file, without extras
     s = dict(settings)
@@ -98,7 +99,7 @@ def main(settings, example):
     op = pathlib.Path(outdir)
     md(op/"report.html")
     OKGREEN = '\033[92m'
-    print(OKGREEN + "SNProcess has finished QC successfully!\nOutput files can be found in{}\n\nA summary is provided in the file found at {}report.html".format(outdir, outdir))
+    print(OKGREEN + "SNProcess has finished QC successfully!\nOutput files can be found in{}\n\nA summary is provided in the file found at {}report.html".format(outdir, outdir) + ENDC)
 
 
 if __name__ == "__main__":

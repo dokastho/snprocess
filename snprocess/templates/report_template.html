@@ -1,34 +1,45 @@
 <!DOCTYPE html>
-<head>
 
+<head>
+  <link rel="icon" href="icon.png">
 </head>
+<title>SNProcess Evaluation</title>
+
 <body>
-    <div>
-        <ul>
-            <li><a href="#Settings">Settings</a></li>
-            {% for graph in graphs %}
-            <li><a href="#{{graph.name}}">{{graph.name}}</a></li>
-            {% endfor %}
-            <li><a href="#Parameters">Parameters</a></li>
-            <li><a href="#removed">Removed SNPs & Individuals</a></li>
-        </ul>
-    </div>
-    <span id="Settings"><h2>Settings</h2></span>
-    {% for key, val in settings.items() %}
-    <p>{{key}}: {{val}}</p>
-    {% endfor %}
-    {% for graph in graphs %}
-    <img src="{{graph.file}}">
-    <span id="{{graph.name}}"><h2>{{graph.name}}</h2></span>
-    {% endfor %}
-    <span id="Parameters"><h2>Parameters</h2></span>
-    {% for key, val in initial.items() %}
-    <p>{{key}}: {{val}}</p>
-    {% endfor%}
-    <span id="removed"><h2>Removed SNPs & Individuals</h2></span>
-    {% for loss in lost %}
-    {% for key, val in loss.items() %}
-    <p>On command {{key}}: {{val}}</p>
-    {% endfor %}
-    {% endfor %}
+  <div>
+    <ul>
+      <li><a href="#Settings">Settings</a></li>
+      {% for graph in graphs %}
+      <li><a href="#{{graph.name}}">{{graph.name}}</a></li>
+      {% endfor %}
+      <li><a href="#Parameters">Parameters</a></li>
+      <li><a href="#removed">Removed SNPs & Individuals</a></li>
+    </ul>
+  </div>
+  <span id="Settings">
+    <h2>Settings</h2>
+  </span>
+  {% for key, val in settings.items() %}
+  <p>{{key}}: {{val}}</p>
+  {% endfor %}
+  {% for graph in graphs %}
+  <img src="{{graph.file}}">
+  <span id="{{graph.name}}">
+    <h2>{{graph.name}}</h2>
+  </span>
+  {% endfor %}
+  <span id="Parameters">
+    <h2>Parameters</h2>
+  </span>
+  {% for key, val in initial.items() %}
+  <p>{{key}}: {{val}}</p>
+  {% endfor%}
+  <span id="removed">
+    <h2>Removed SNPs & Individuals</h2>
+  </span>
+  {% for loss in lost %}
+  {% for key, val in loss.items() %}
+  <p>On command {{key}}: {{val}}</p>
+  {% endfor %}
+  {% endfor %}
 </body>
