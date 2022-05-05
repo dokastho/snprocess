@@ -9,14 +9,17 @@ def make_bed(inDir, inFile):
     plink(" --file {} --make-bed --out {}".format(inFileLink, inFileLink))
 
 
-def md(output_path):
+def md(output_path, context, path):
+    # load the template environment
     template_env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader("snprocess/templates"),
+        loader=jinja2.FileSystemLoader(path + "/templates"),
         autoescape=jinja2.select_autoescape(['html', 'xml']), )
     
+    # get the template
     temp = template_env.get_template("report_template.html")
-    data = json.load(open("snprocess/context.json"))
-    output_path.write_text(temp.render(data))
+    
+    # render the html report template
+    output_path.write_text(temp.render(context))
 
 
 def printdict(d : dict) -> str:

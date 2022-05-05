@@ -1,5 +1,6 @@
 """Run all scripts on all phases"""
 import pathlib
+from shutil import copyfile as copy
 from snprocess.qc.qc_1 import QC_1
 from snprocess.qc.qc_2 import QC_2
 from snprocess.model import make_bed, md, printdict
@@ -27,8 +28,8 @@ def main(settings, example):
     # if 'plink' not in plink_binary:
     #     exit(FAIL + "Plink not installed. Download it here:\nhttps://www.cog-genomics.org/plink/1.9/" + ENDC)
 
-    example_path = os.path.dirname(os.path.realpath(__file__))
-    reqd = dict(json.load(open(example_path + "/example.json")))
+    snprocess_path = os.path.dirname(os.path.realpath(__file__))
+    reqd = dict(json.load(open(snprocess_path + "/example.json")))
 
     if example:
         print(printdict(reqd))
@@ -73,6 +74,7 @@ def main(settings, example):
 
     flist = glob.glob(inputFile + "*")
 
+    # convert to binary if input file not binary already
     binary = True
     if len(flist) == 0:
         exit(FAIL + "Input files {}* not found in {}".format(settings['inFile'], input) + ENDC)
@@ -86,20 +88,26 @@ def main(settings, example):
     if not binary:
         make_bed(input, settings['inFile'])
 
+    # start QC
     print(OKGREEN + BOLD + "Starting QC..." + ENDC)
     markup = QC_1(settings)
     markup = QC_2(settings, markup)
 
     markup["settings"] = {}
 
+    # add input parameters to output file
     for item, val in settings.items():
         markup["settings"][item] = val
 
+    # render output html
     json.dump(markup, open("{}/context.json".format(outdir), "w"), indent=4)
     op = pathlib.Path(outdir)
-    md(op/"report.html")
+    md(op/"index.html", markup, snprocess_path)
     OKGREEN = '\033[92m'
-    print(OKGREEN + "SNProcess has finished QC successfully!\nOutput files can be found in{}\n\nA summary is provided in the file found at {}report.html".format(outdir, outdir) + ENDC)
+    print(OKGREEN + "SNProcess has finished QC successfully!\nOutput files can be found in {}\n\nA summary is provided in the file found at {}index.html".format(outdir, outdir) + ENDC)
+
+    # copy static srcs to output
+    copy(snprocess_path + "/logo.png", outdir + "/logo.png")
 
 
 if __name__ == "__main__":

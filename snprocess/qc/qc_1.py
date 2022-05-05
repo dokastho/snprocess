@@ -49,13 +49,13 @@ def QC_1(opts):
 
     data = json_save(
         "Histogram individual missingness",
-        outDir + "Hist-individualMissingness.png",
+        "Hist-individualMissingness.png",
         data
     )
 
     data = json_save(
         "Histogram SNP missingness",
-        outDir + "Hist-snpMissingness.png",
+        "Hist-snpMissingness.png",
         data
     )
 
@@ -85,19 +85,19 @@ def QC_1(opts):
 
     data = json_save(
         "Gender Sexcheck",
-        outDir + "Gender_check.png",
+        "Gender_check.png",
         data
     )
 
     data = json_save(
         "Male Sexcheck",
-        outDir + "Men_check.png",
+        "Men_check.png",
         data
     )
 
     data = json_save(
         "Female Sexcheck",
-        outDir + "Women_check.png",
+        "Women_check.png",
         data
     )
 
@@ -141,7 +141,7 @@ def QC_1(opts):
 
     data = json_save(
         "MAF Distribution",
-        outDir + "MAF_distribution.png",
+        "MAF_distribution.png",
         data
     )
 
@@ -172,13 +172,13 @@ def QC_1(opts):
 
     data = json_save(
         "Histogram HWE",
-        outDir + "HWE_Histogram.png",
+        "HWE_Histogram.png",
         data
     )
 
     data = json_save(
         "Histogram HWE: strongly deviating SNPs only",
-        outDir + "HWE_below_theshold_Histogram.png",
+        "HWE_below_theshold_Histogram.png",
         data
     )
 
@@ -215,7 +215,7 @@ def QC_1(opts):
 
     data = json_save(
         "Heterozygosity Rate",
-        outDir + "heterozygosity.png",
+        "heterozygosity.png",
         data
     )
 
