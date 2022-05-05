@@ -5,6 +5,8 @@
   
   SNProcess is a Single Nucleotide Polymorphism (SNP) Quality Control pipeline, written in python
   the procedure was developed by <INSERT LAB NAME HERE>.
+  see source code at https://github.com/choishingwan/PRS-Tutorial
+  and for more info https://github.com/MareesAT/GWA_t utorial
 ## QC1
 Steps for QC:
 1. Check missingness and generate plots
