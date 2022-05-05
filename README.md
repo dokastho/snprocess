@@ -27,6 +27,8 @@
   ```
   and go to **localhost:8008**. This is a way of viewing this generated webpage using your own computer as a host. Pretty cool, right?
 
+  ![](gif/info.gif)
+
 ## FAQ
   * What should my input json look like? *Run snprocess -e for an example json printed to your console, or snprocess -g to generate your own to your output directory*
   * SNProcess won't run for me! What's wrong? *SNProcess is a somewhat unique program in that it uses [plink](https://www.cog-genomics.org/plink/1.9/) as a driver/helper. Make sure that's installed. If the issue persists, please file a bug report at the snprocess [repo](https://github.com/dokastho/snprocess)*

@@ -32,7 +32,7 @@ def printdict(d: dict) -> str:
     outstr = ""
     for item in d.keys():
         outstr += "\t" + item + ": " + str(d[item]) + "\n"
-    return outstr
+    return outstr.rstrip("\n")
 
 
 def clean(outDir):

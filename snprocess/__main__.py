@@ -100,12 +100,12 @@ def main(settings, example, info, generate):
     try:
         settings = json.load(open(settings))
     except:
-        exit(FAIL + "Settings JSON does not exist.\nPrint an example settings JSON using 'snprocess -e'" + ENDC)
+        exit(FAIL + BOLD + "Settings JSON does not exist.\nPrint an example settings JSON using 'snprocess -e', or generate one with 'snprocess -g'" + ENDC)
 
     try:
         outdir = settings['outDir']
     except:
-        exit(FAIL + "Output dir parameter missing from settings JSON.\nPrint an example settings JSON using 'snprocess -e'" + ENDC)
+        exit(FAIL + BOLD + "Output dir parameter missing from settings JSON.\nPrint an example settings JSON using 'snprocess -e'" + ENDC)
     o = pathlib.Path(outdir)
     if not o.exists():
         os.makedirs(o)
