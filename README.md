@@ -52,3 +52,4 @@ This portion of the pipeline compares the user data with data in the 1,000 genom
 * [ ] use tmp folder for files that arent used in index.html and qcplink.xyz
 * [ ] 1kg check if exists, otherwise download. use settings input flag to do qc on 1kg or not
 * [ ] remove snprocess.log
+* [ ] try to redirect warnings to log
