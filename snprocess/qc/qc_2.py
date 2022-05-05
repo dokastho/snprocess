@@ -236,7 +236,7 @@ def QC_2(opts, data):
 
     # generate plots
     snprocess_path = os.path.dirname(os.path.realpath(__file__))
-    run_command("{}Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
+    run_command("Rscript {}/MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
         snprocess_path, outDir, outDir, outDir))
     
     data = json_save(
