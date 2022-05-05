@@ -66,17 +66,17 @@ def QC_1(opts):
     # Also, they filter on SNP missingness and indivudal missingness. Srijan first filters on individual missingness and then on SNPs much later
 
     # filter SNPs at 0.01
-    output, data = plink(" --bfile {} --geno {} --make-bed --out {}plink".format(inFile,
+    output, data = plink(" --bfile {} --geno {} --make-bed --out {}plinka".format(inFile,
                                                                                  opts['geno'], outDir), data)
 
     # filter individuals at 0.05
-    output, data = plink(" --bfile {}plink --mind {} --make-bed --out {}plink".format(outDir,
+    output, data = plink(" --bfile {}plinka --mind {} --make-bed --out {}plinkb".format(outDir,
                                                                                       opts['mind'], outDir), data)
 
     ####################################################
     # STEP 3: sexcheck
     output, data = plink(
-        " --bfile {}plink --check-sex --out {}plink".format(outDir, outDir), data)
+        " --bfile {}plinkb --check-sex --out {}plinka".format(outDir, outDir), data)
 
     # visualize the sex check
     sc = read_snp_data(outDir, "plink.sexcheck", head=0)
@@ -113,7 +113,7 @@ def QC_1(opts):
     # bash('awk \'{{print $1, $2}}\' awkout.txt > {}sex_discrepency.txt'.format(outDir))
 
     output, data = plink(
-        " -bfile {}plink --remove {}sex_discrepency.txt --make-bed --out {}plink".format(outDir, outDir, outDir), data)
+        " -bfile {}plinka --remove {}sex_discrepency.txt --make-bed --out {}plinkb".format(outDir, outDir, outDir), data)
 
     # impute sex... (not sure why this is necessary). NOT RUNNING IT
     # plink -bfile ${outFile}_5 --impute-sex --make-bed --out ${outFile}_6
@@ -128,11 +128,11 @@ def QC_1(opts):
     output.to_csv(sep="\t", path_or_buf='{}snp_1_22.txt'.format(
         outDir), index=False)
 
-    output, data = plink(" --bfile {}plink --extract {}snp_1_22.txt --make-bed --out {}plink".format(outDir, outDir, outDir), data)
+    output, data = plink(" --bfile {}plinkb --extract {}snp_1_22.txt --make-bed --out {}plinka".format(outDir, outDir, outDir), data)
 
     # generate plot of MAF distribution
     output, data = plink(
-        " --bfile {}plink --freq --out {}MAF_check".format(outDir, outDir), data)
+        " --bfile {}plinka --freq --out {}MAF_check".format(outDir, outDir), data)
 
     # visualize it
 
@@ -149,14 +149,14 @@ def QC_1(opts):
 
     # remove SNPs with low MAF... major point of diversion. Srijan's MAF filtering crieria is VERY small. 0.005 vs what they recommend here of 0.05. I'll go midway with 0.01.
     # maf filter at 0.005
-    output, data = plink(" --bfile {}plink --maf {} --make-bed --out {}plink".format(outDir,
+    output, data = plink(" --bfile {}plinka --maf {} --make-bed --out {}plinkb".format(outDir,
                                                                                      opts['maf'], outDir), data)
 
     ####################################################
     # STEP 5: Delete SNPs not in the Hardy-WEinberg equilibrium (HWE)
 
     output, data = plink(
-        " --bfile {}plink --hardy --out {}plink".format(outDir, outDir), data)
+        " --bfile {}plinkb --hardy --out {}plinka".format(outDir, outDir), data)
 
     # select SNPs with HWE p-value below 0.00001
     # bash("awk '{ if ($9 < 0.0001) print $0 }' {}.hwe > {}zoomhwe.hwe".format(outFile, outDir))
@@ -189,7 +189,7 @@ def QC_1(opts):
     # this is again a departure from Yu's pipeline as they filter at 1e-6
     # plink --bfile ${outFile}_7 --hwe 1e-6 --make-bed --out ${outFile}_8
     output, data = plink(
-        " --bfile {}plink --hwe {} --hwe-all --make-bed --out {}plink".format(outDir, opts['hwe'], outDir), data)
+        " --bfile {}plinka --hwe {} --hwe-all --make-bed --out {}plinkb".format(outDir, opts['hwe'], outDir), data)
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning
@@ -203,12 +203,12 @@ def QC_1(opts):
     # Yu's parameters are 100, 25, 0.5. Given the small sample sizes we are dealing with, Yu's parameters, particularly for r^2
     # make more sense. More SNPs would be excluded with r^2=0.2
 
-    output, data = plink(" --bfile {}plink --indep-pairwise {} {} {} --out {}indepSNP".format(outDir,
+    output, data = plink(" --bfile {}plinkb --indep-pairwise {} {} {} --out {}indepSNP".format(outDir,
                                                                                               opts['indep_pairwise'][0], opts['indep_pairwise'][1], opts['indep_pairwise'][2], outDir), data)
 
     # get the pruned data set
     output, data = plink(
-        " --bfile {}plink --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir), data)
+        " --bfile {}plinkb --extract {}indepSNP.prune.in --het --out {}R_hetCheck".format(outDir, outDir, outDir), data)
 
     # plot the heterogygosity rate
     df = read_snp_data(outDir, "R_hetCheck.het", head=0)
@@ -248,7 +248,7 @@ def QC_1(opts):
 
     # This step isn't there in Yu's workflow, because it shouldn't really be necessary.
     # relatedness @0.2
-    output, data = plink(" --bfile {}plink --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(
+    output, data = plink(" --bfile {}plinkb --extract {}indepSNP.prune.in --genome --min {} --out {}pihat_min0.2".format(
         outDir, outDir, opts['relatedness'], outDir), data)
 
     # visualize relations. But there will be none! or should be none!
