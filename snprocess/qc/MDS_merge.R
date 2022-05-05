@@ -15,4 +15,4 @@ ggplot(merged, aes(C1, C2, group = race)) +
   geom_vline(xintercept = 0) +
   theme_tufte()
 
-ggsave(paste0(fname,"/MDS_merge.png"))
+ggsave(paste0(fname,"/MDS_merge.png"), width="3", height="3")
