@@ -54,3 +54,4 @@ This portion of the pipeline compares the user data with data in the 1,000 genom
 * [ ] remove snprocess.log
 * [ ] try to redirect warnings to log
 * [ ] save the plink file to output dur BEFORE LD pruning (that step is just for qc2) but keep this in for qc2
+* [ ] also save MDS_merged.mds
