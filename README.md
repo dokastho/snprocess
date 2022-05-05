@@ -1,5 +1,5 @@
 # SNProcess
-[](img/logo.png)
+![](img/logo.png)
   by Thomas Dokas
   
   <dokastho@umich.edu>
