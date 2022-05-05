@@ -1,4 +1,4 @@
-#### SNProcess
+# SNProcess
 [](img/logo.png)
   by Thomas Dokas
   
@@ -30,7 +30,7 @@
   * What should my input json look like? *Run snprocess -e for an example json printed to your console, or snprocess -g to generate your own to your output directory*
   * SNProcess won't run for me! What's wrong? *SNProcess is a somewhat unique program in that it uses [plink](https://www.cog-genomics.org/plink/1.9/) as a driver/helper. Make sure that's installed. If the issue persists, please file a bug report at the snprocess [repo](https://github.com/dokastho/snprocess)*
 
-#### More About SNProcess
+# More About SNProcess
 
 ## QC1
 Steps for QC:
@@ -44,5 +44,5 @@ Steps for QC:
 ## QC2
 This portion of the pipeline compares the user data with data in the 1,000 genome project and produces graphs that show the population stratification based on race & ethnicity
 
-#### TODO
+# TODO
 * [ ] move final rscripts to python
