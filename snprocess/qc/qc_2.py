@@ -16,7 +16,6 @@ def QC_2(opts, data):
     BOLD = '\033[1m'
     ENDC = '\033[0m'
 
-    inDir = opts['fileroute'] + opts['inDir']
     # outDir = opts['fileroute'] + opts['outDir']
     outDir = opts['outDir']
     g1kDir = opts['1kG_dir']
