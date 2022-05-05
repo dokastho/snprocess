@@ -49,3 +49,4 @@ This portion of the pipeline compares the user data with data in the 1,000 genom
 
 # TODO
 * [ ] move final rscripts to python
+* [ ] use tmp folder for files that arent used in index.html and qcplink.xyz

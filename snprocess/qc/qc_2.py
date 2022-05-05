@@ -232,9 +232,9 @@ def QC_2(opts, data):
     output.to_csv(sep="\t", path_or_buf='{}raceFile2.txt'.format(
         outDir), index=False)
 
-    # # generate plots
-    # run_command("Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
-    #     outDir, outDir, outDir))
+    # generate plots
+    run_command("Rscript MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
+        outDir, outDir, outDir))
     # merge = read_snp_data(outDir, "MDS_merged.mds", head=0)
     # race = read_snp_data(outDir, "raceFile2.txt", head=0)
     # g.mds_merge(merge, race, outDir)
