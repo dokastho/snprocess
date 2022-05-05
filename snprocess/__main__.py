@@ -25,7 +25,7 @@ def main(settings, example):
     # check that plink is installed
     plink_binary = glob.glob("/usr/bin/*")
     if 'plink' not in plink_binary:
-        exit(FAIL + "Plink not installed. Download it here:\nhttps://www.cog-genomics.org/plink/1.9/")
+        exit(FAIL + "Plink not installed. Download it here:\nhttps://www.cog-genomics.org/plink/1.9/" + ENDC)
 
     example_path = os.path.dirname(os.path.realpath(__file__))
     reqd = dict(json.load(open(example_path + "/example.json")))
@@ -37,12 +37,12 @@ def main(settings, example):
     try:
         settings = json.load(open(settings))
     except:
-        exit(FAIL + "Settings JSON does not exist.\nPrint an example settings JSON using 'snprocess -e'")
+        exit(FAIL + "Settings JSON does not exist.\nPrint an example settings JSON using 'snprocess -e'" + ENDC)
 
     try:
         outdir = settings['outDir']
     except:
-        exit(FAIL + "Output dir parameter missing from settings JSON.\nPrint an example settings JSON using 'snprocess -e'")
+        exit(FAIL + "Output dir parameter missing from settings JSON.\nPrint an example settings JSON using 'snprocess -e'" + ENDC)
     o = pathlib.Path(outdir)
     if not o.exists():
         os.makedirs(o)
@@ -56,15 +56,15 @@ def main(settings, example):
     reqd = set(reqd.keys())
     for param in s.keys():
         if param not in reqd:
-            exit(FAIL + "Extra parameter in settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format(param))
+            exit(FAIL + "Extra parameter in settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format(param) + ENDC)
         reqd.remove(param)
     if len(reqd) != 0:
         if len(reqd) == 1:
             exit(
-                FAIL + "Parameter missing from settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format("".join(reqd)))
+                FAIL + "Parameter missing from settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format("".join(reqd)) + ENDC)
         else:
             misslist = ", ".join(reqd)
-            exit(FAIL + "Parameters missing from settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format(misslist))
+            exit(FAIL + "Parameters missing from settings JSON: {}.\n\nPrint an example settings JSON using 'snprocess -e'".format(misslist) + ENDC)
 
     input = settings['fileroute'] + settings['inDir']
 
@@ -74,7 +74,7 @@ def main(settings, example):
 
     binary = True
     if len(flist) == 0:
-        exit(FAIL + "Input files {}* not found in {}".format(settings['inFile'], input))
+        exit(FAIL + "Input files {}* not found in {}".format(settings['inFile'], input) + ENDC)
     else:
         for fl in flist:
             if fl[-3:] == "bim":
