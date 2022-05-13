@@ -49,9 +49,9 @@ This portion of the pipeline compares the user data with data in the 1,000 genom
 
 # TODO
 * [ ] move final rscripts to python. shouldn't there be a python-like ggplot?
-* [ ] use tmp folder for files that arent used in index.html and qcplink.xyz
+* [x] use tmp folder for files that arent used in index.html and qcplink.xyz
 * [ ] 1kg check if exists, otherwise download. use settings input flag to do qc on 1kg or not
 * [ ] remove snprocess.log
 * [ ] try to redirect warnings to log
-* [ ] save the plink file to output dur BEFORE LD pruning (that step is just for qc2) but keep this in for qc2
+* [x] save the plink file to output dur BEFORE LD pruning (that step is just for qc2) but keep this in for qc2
 * [ ] also save MDS_merged.mds
