@@ -19,10 +19,11 @@ def QC_2(opts, data):
     ENDC = '\033[0m'
 
     # outDir = opts['fileroute'] + opts['outDir']
-    outDir = opts['outDir']
+    # outDir = opts['outDir']
+    outDir = "tmp"
     g1kDir = opts['1kG_dir']
 
-    if not Path.is_file(Path(outDir + "1kG_qc.bim")):
+    if not Path.is_file(Path(opts['outDir'] + "1kG_qc.bim")):
         print(WARNING + BOLD + "QC needs to be run on 1k Genome file. This will take a while..." + ENDC)
         # Name missing SNPs
         _, data = plink(

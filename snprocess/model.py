@@ -35,11 +35,9 @@ def printdict(d: dict) -> str:
     return outstr.rstrip("\n")
 
 
-def clean(outDir):
+def clean():
     """Remove unnecesary files produced by QC."""
-    leftovers = glob.glob(outDir + "plink.*")
-    for item in leftovers:
-        remove(item)
+    os.rmdir("tmp")
 
 
 def run(outdir, server_class=http.server.HTTPServer, handler_class=http.server.SimpleHTTPRequestHandler):

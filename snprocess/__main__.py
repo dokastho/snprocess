@@ -155,8 +155,8 @@ def main(settings, example, info, generate):
     markup = QC_1(settings)
     markup = QC_2(settings, markup)
 
-    # clean up files in outdir
-    clean(outdir)
+    # remove tmp file
+    clean()
 
     markup["settings"] = {}
 
