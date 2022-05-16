@@ -38,22 +38,22 @@ def main(settings, example, info, generate):
         while True:
             settings['1kG_dir'] = input("1k Genome File Route (starts and ends with '/'): ")
             d = settings['1kG_dir']
-            if len(d) > 0 and d.endswith('/') and d.startswith('/'):
+            if len(d) > 0 and d.endswith('/'):
                 break
         while True:
-            settings['inFile'] = input("File pattern of input files (should be .bed if binary, .map if not; note: do not include the extension): ") # TODO verify
+            settings['inFile'] = input("File pattern of input files (should be .bed if binary, .map if not; note: do not include the extension): ")
             d = settings['inFile']
             if len(d) > 0 and not d.endswith('/') and not d.startswith('/') and not d.endswith('.bed') and not d.endswith('.map'):
                 break
         while True:
             settings['inDir'] = input("Path to your input files, AKA their folder (starts and ends with '/'): ")
             d = settings['inDir']
-            if len(d) > 0 and d.endswith('/') and d.startswith('/'):
+            if len(d) > 0 and d.endswith('/'):
                 break
         while True:
             settings['outDir'] = input("Path to your output info. (This settings json will be saved there shortly, starts and ends with '/'): ")
             d = settings['outDir']
-            if len(d) > 0 and d.endswith('/') and d.startswith('/'):
+            if len(d) > 0 and d.endswith('/'):
                 break
         while True:
             settings['geno'] = input("SNP missingness threshhold (plink --geno): ")

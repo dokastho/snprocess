@@ -28,7 +28,7 @@ def QC_1(opts):
     inFile = inDir + opts['inFile']
     # outDir = opts['fileroute'] + opts['outDir']
     # outDir = opts['outDir']
-    outDir = "tmp"
+    outDir = "tmp/"
 
 
     ####################################################

@@ -20,7 +20,7 @@ def QC_2(opts, data):
 
     # outDir = opts['fileroute'] + opts['outDir']
     # outDir = opts['outDir']
-    outDir = "tmp"
+    outDir = "tmp/"
     g1kDir = opts['1kG_dir']
 
     if not Path.is_file(Path(opts['outDir'] + "1kG_qc.bim")):
