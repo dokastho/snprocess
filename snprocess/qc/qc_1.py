@@ -28,7 +28,7 @@ def QC_1(opts):
     inFile = inDir + opts['inFile']
     # outDir = opts['fileroute'] + opts['outDir']
     # outDir = opts['outDir']
-    outDir = "tmp/"
+    outDir =  "tmp/"
 
 
     ####################################################
@@ -193,7 +193,7 @@ def QC_1(opts):
 
     # save this file to out
     output, data = plink(
-        " --bfile {} --hwe {} --hwe-all --make-bed --out {}qcplink".format(opts['outDir'] + opts['inFile'], opts['hwe'], opts['outDir']), data)
+        " --bfile {}plinka --hwe {} --hwe-all --make-bed --out {}".format(outDir, opts['hwe'], opts['outDir'] + opts['inFile']), data)
 
     ############################################################
     # STEP 6: Heterozygosity and LD Pruning

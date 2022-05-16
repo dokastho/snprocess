@@ -115,6 +115,10 @@ def main(settings, example, info, generate):
             # exit(FAIL + "Output directory is not empty")
             pass
 
+    # make temp folder
+    os.makedirs("tmp", exist_ok=True)
+    
+    
     # check that all parameters are satisfied in the input file, without extras
     s = dict(settings)
     reqd = set(reqd.keys())

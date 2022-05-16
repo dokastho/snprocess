@@ -1,0 +1,12 @@
+{
+    "1kG_dir": "/home/tjdokas/shops/onr_samples_group/clubhouse/GenotypeInfo2015_2018/Files_for_QC/",
+    "inFile": "merge",
+    "inDir": "/home/tjdokas/shops/onr_samples_group/clubhouse/PRS/Phase1/input/",
+    "outDir": "testout/",
+    "geno": 0.01,
+    "mind": 0.05,
+    "maf": 0.005,
+    "hwe": 1e-10,
+    "indep_pairwise": [50, 5, 0.5],
+    "relatedness": 0.2
+}
