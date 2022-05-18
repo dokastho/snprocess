@@ -46,7 +46,7 @@ def QC_1(opts):
 
     imiss = read_snp_data(outDir, "plink.imiss", head=0)
     lmiss = read_snp_data(outDir, "plink.lmiss", head=0)
-    g.hist_miss(imiss, lmiss, outDir)
+    g.hist_miss(imiss, lmiss, opts['outDir'])
 
     data = json_save(
         "Histogram individual missingness",
@@ -81,7 +81,7 @@ def QC_1(opts):
 
     # visualize the sex check
     sc = read_snp_data(outDir, "plinka.sexcheck", head=0)
-    g.sexcheck(sc, outDir)
+    g.sexcheck(sc, opts['outDir'])
     # bash("/usr/bin/Rscript --no-save {}sex_check.R {}plink.sexcheck {}".format(outDir, outDir, outDir))
 
     data = json_save(
@@ -138,7 +138,7 @@ def QC_1(opts):
     # visualize it
 
     frq = read_snp_data(outDir, "MAF_check.frq", head=0)
-    g.maf_check(frq, outDir)
+    g.maf_check(frq, opts['outDir'])
 
     data = json_save(
         "MAF Distribution",
@@ -169,7 +169,7 @@ def QC_1(opts):
 
     hwe_df = read_snp_data(outDir, "plinka.hwe", head=0)
     zoom = read_snp_data(outDir, "zoom.hwe", head=0)
-    g.hwe(hwe_df, zoom, outDir)
+    g.hwe(hwe_df, zoom, opts['outDir'])
 
     data = json_save(
         "Histogram HWE",
@@ -216,7 +216,7 @@ def QC_1(opts):
 
     # plot the heterogygosity rate
     df = read_snp_data(outDir, "R_hetCheck.het", head=0)
-    g.heterozygosity_rate(df, outDir)
+    g.heterozygosity_rate(df, opts['outDir'])
 
     data = json_save(
         "Heterozygosity Rate",

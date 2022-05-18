@@ -3,9 +3,8 @@ import os
 from time import sleep
 import jinja2
 from snprocess.qc.model import plink
-import glob
-from os import remove
 import http.server
+import shutil
 
 
 def make_bed(inDir, inFile):
@@ -37,7 +36,7 @@ def printdict(d: dict) -> str:
 
 def clean():
     """Remove unnecesary files produced by QC."""
-    os.rmdir("tmp")
+    shutil.rmtree("tmp")
 
 
 def run(outdir, server_class=http.server.HTTPServer, handler_class=http.server.SimpleHTTPRequestHandler):
