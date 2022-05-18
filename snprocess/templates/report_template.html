@@ -26,10 +26,10 @@
   <p>{{key}}: {{val}}</p>
   {% endfor %}
   {% for graph in graphs %}
-  <img src="{{graph.file}}">
   <span id="{{graph.name}}">
     <h2>{{graph.name}}</h2>
   </span>
+  <img src="{{graph.file}}">
   {% endfor %}
   <span id="Parameters">
     <h2>Parameters</h2>
