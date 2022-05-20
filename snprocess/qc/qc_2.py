@@ -170,6 +170,9 @@ def QC_2(opts, data):
     output, data = plink(
         "--bfile {}MDS_merge --read-genome {}MDS_merge.genome --cluster --mds-plot 10 --out {}MDS_merged".format(outDir, outDir, outDir), data)
 
+    # save mds_merged to output folder
+    output, data = plink(
+        "--bfile {}MDS_merge --read-genome {}MDS_merge.genome --cluster --mds-plot 10 --out {}MDS_merged".format(outDir, outDir, opts['outDir']), data)
     # #### Plot it!
 
     # # Convert population codes into super-population codes (continents)
@@ -234,11 +237,15 @@ def QC_2(opts, data):
     output = output.drop(2, 1)
     output.to_csv(sep="\t", path_or_buf='{}raceFile2.txt'.format(
         outDir), index=False)
+    
+    # save race file to output
+    output.to_csv(sep="\t", path_or_buf='{}raceFile2.txt'.format(
+        opts['outDir']), index=False)
 
     # generate plots
     snprocess_path = os.path.dirname(os.path.realpath(__file__))
-    # run_command("Rscript {}/MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
-    #     snprocess_path, outDir, outDir, outDir))
+    run_command("Rscript {}/MDS_merge.R {}MDS_merged.mds {}raceFile2.txt {}".format(
+        snprocess_path, outDir, outDir, outDir))
     
     data = json_save(
         "Population Stratification",
